@@ -15,7 +15,7 @@ Image.MAX_IMAGE_PIXELS = None
 NE = '/tmp/geo/ne/'
 OUT = '/home/claude/dkat/hand'
 os.makedirs(OUT, exist_ok=True)
-FONT = '/tmp/geo/pkgs/ph/package/files/patrick-hand-latin-400-normal.ttf'
+FONTS = {'it': '/tmp/geo/fonts/literata-latin-400-italic.ttf', 'it5': '/tmp/geo/fonts/literata-latin-500-italic.ttf', 'sans5': '/tmp/geo/fonts/figtree-latin-500-normal.ttf', 'sans6': '/tmp/geo/fonts/figtree-latin-600-normal.ttf', 'sans7': '/tmp/geo/fonts/figtree-latin-700-normal.ttf'}
 S = 2  # supersampling
 
 def feats(f): return json.load(open(NE + f + '.geojson'))['features']
@@ -48,17 +48,17 @@ del sr
 KOP = np.load('/tmp/geo/kop.npy'); KCLS = json.load(open('/tmp/geo/kopcls.json'))
 
 ECO = [  # (id, nome, cor, classes)
- ('fu', 'floresta tropical úmida', (86, 145, 84), ['Af', 'Am']),
- ('sv', 'savana e cerrado', (184, 192, 104), ['Aw', 'As']),
- ('sa', 'semiárido e estepe', (214, 190, 128), ['BSh', 'BSk']),
- ('de', 'deserto', (236, 214, 158), ['BWh', 'BWk']),
- ('me', 'matas e campos mediterrâneos', (165, 172, 104), ['Csa', 'Csb', 'Csc']),
- ('st', 'florestas e campos subtropicais', (132, 178, 104), ['Cfa', 'Cwa']),
- ('ft', 'floresta temperada e de altitude', (118, 165, 118), ['Cfb', 'Cfc', 'Cwb', 'Cwc']),
- ('fm', 'floresta mista de clima frio', (104, 150, 126), ['Dfa', 'Dfb', 'Dsa', 'Dsb', 'Dwa', 'Dwb']),
- ('ta', 'taiga (floresta boreal)', (84, 124, 108), ['Dfc', 'Dfd', 'Dsc', 'Dsd', 'Dwc', 'Dwd']),
- ('tu', 'tundra e alta montanha', (186, 180, 166), ['ET']),
- ('ge', 'gelo permanente', (246, 247, 248), ['EF']),
+ ('fu', 'floresta tropical úmida', (104, 150, 100), ['Af', 'Am']),
+ ('sv', 'savana e cerrado', (190, 196, 140), ['Aw', 'As']),
+ ('sa', 'semiárido e estepe', (216, 204, 158), ['BSh', 'BSk']),
+ ('de', 'deserto', (234, 222, 188), ['BWh', 'BWk']),
+ ('me', 'matas e campos mediterrâneos', (178, 184, 138), ['Csa', 'Csb', 'Csc']),
+ ('st', 'florestas e campos subtropicais', (152, 186, 132), ['Cfa', 'Cwa']),
+ ('ft', 'floresta temperada e de altitude', (140, 176, 140), ['Cfb', 'Cfc', 'Cwb', 'Cwc']),
+ ('fm', 'floresta mista de clima frio', (130, 164, 146), ['Dfa', 'Dfb', 'Dsa', 'Dsb', 'Dwa', 'Dwb']),
+ ('ta', 'taiga (floresta boreal)', (112, 144, 130), ['Dfc', 'Dfd', 'Dsc', 'Dsd', 'Dwc', 'Dwd']),
+ ('tu', 'tundra e alta montanha', (200, 196, 184), ['ET']),
+ ('ge', 'gelo permanente', (246, 248, 250), ['EF']),
 ]
 K2E = np.zeros(len(KCLS) + 1, dtype=np.uint8)
 for i, e in enumerate(ECO):
@@ -179,9 +179,9 @@ def render(k):
     rx = ((LO + 180) / 360 * 10800 - .5); ry = ((90 - LA) / 180 * 5400 - .5)
     hs = ndimage.map_coordinates(HS, [ry, rx], order=1, mode='wrap')
     zoom = 10800 / 360 / (sx / S)  # px fonte por px final
-    hs = ndimage.gaussian_filter(hs, max(0, S * .6 / max(zoom, .05) * .15))
+    hs = ndimage.gaussian_filter(hs, max(.6 * S, S * 1.2 / max(zoom, .05) * .5))
     fz = float(np.clip(zoom / .6, .12, 1))
-    shade = np.clip(1 + hs / 70 * fz, .72, 1.22)
+    shade = np.clip(1 + hs / 115 * fz, .82, 1.14)
 
     # ecossistemas
     gy = np.clip(((90 - LA) / .5).astype(int), 0, 359); gx = np.clip(((LO + 180) / .5).astype(int), 0, 719)
@@ -200,41 +200,31 @@ def render(k):
     eco_id = full[np.clip(np.round(fy).astype(int), 0, 359), np.clip(np.round(fx).astype(int), 0, 719) % 720]
 
     # papel
-    pn = noise(H, W, 7)
-    paper = np.stack([np.full((H, W), c, np.float32) for c in (244, 236, 216)], -1) * (0.94 + .1 * pn[..., None])
-    img = paper.copy()
+    pn = np.zeros((H, W), np.float32)
+    img = np.zeros((H, W, 3), np.float32)
     # mar
     lab_, nlab = ndimage.label(land + lm > .5)
     sizes = ndimage.sum(np.ones_like(lab_), lab_, range(1, nlab + 1)) if nlab else []
     bigland = np.isin(lab_, [i + 1 for i, sz in enumerate(sizes) if sz > 900 * S * S]) if nlab else (land > .5)
     dist = ndimage.distance_transform_edt(~bigland)
-    sea = np.array([170, 205, 222], np.float32)
-    seaf = np.clip(dist / (60 * S), 0, 1)[..., None]
-    seac = sea * (1 - .12 * (1 - seaf)) * (0.95 + .08 * pn[..., None])
-    img = img * .25 + seac * .75
-    for d0, a in ((5 * S, .45), (11 * S, .3), (19 * S, .18)):
-        rip = np.clip(1 - np.abs(dist - d0) / (.9 * S), 0, 1) * a
-        img = img * (1 - rip[..., None]) + np.array([96, 140, 165], np.float32) * rip[..., None]
+    sea = np.array([206, 224, 233], np.float32)
+    seaf = np.clip(dist / (40 * S), 0, 1)[..., None]
+    img = sea * (1 - .07 * (1 - seaf)) + np.zeros_like(img)
     # terras vizinhas
-    oth = np.array([228, 222, 206], np.float32) * (.96 + .06 * pn[..., None])
-    oth = oth * (1 + (shade[..., None] - 1) * .7)
+    oth = np.array([236, 233, 226], np.float32)
+    oth = oth * (1 + (shade[..., None] - 1) * .4)
     img = img * (1 - land[..., None]) + oth * land[..., None]
     # país: aquarela
-    tex = noise(H, W, 11, ((3, .4), (12, .35), (48, .25)))
-    eco = cols * (0.9 + .18 * tex[..., None]) * shade[..., None]
-    er = ndimage.binary_erosion(cm > .5, iterations=3 * S)
-    edge = np.clip((cm > .5).astype(np.float32) - ndimage.gaussian_filter(er.astype(np.float32), 2 * S), 0, 1)
-    eco = eco * (1 - .22 * edge[..., None])
+    eco = cols * (1 + (shade[..., None] - 1) * 1.1)
     img = img * (1 - cm[..., None]) + eco * cm[..., None]
     # pontilhado nos desertos
     dz = np.isin(eco_id, [i + 1 for i, e in enumerate(ECO) if e[0] in ('de',)]) & (cm > .5)
-    dots = (np.random.default_rng(3).random((H, W)) < .012) & dz
-    img[dots] = img[dots] * .78
+
     # gelo
     gl = glac * land
     img = img * (1 - gl[..., None] * .8) + np.array([248, 250, 252], np.float32) * shade[..., None] * gl[..., None] * .8
     # lagos
-    lakec = np.array([150, 192, 214], np.float32) * (.96 + .06 * pn[..., None])
+    lakec = np.array([196, 218, 230], np.float32)
     img = img * (1 - lm[..., None]) + lakec * lm[..., None]
 
     im = Image.fromarray(np.clip(img, 0, 255).astype(np.uint8))
@@ -242,9 +232,7 @@ def render(k):
     seed = sum(map(ord, k))
     span = max(w * cosm, h)
     def line(coords, col, wd, amp=1.0, sd=0):
-        pts = densify(coords, 6 * S)
-        pts = wobble(pts, amp * S, seed + sd)
-        d.line(pts, fill=col, width=max(1, int(wd)), joint='curve')
+        d.line(coords, fill=col, width=max(1, int(round(wd))), joint='curve')
 
     # rios
     rlim = 12 if span < 4 else 10 if span < 10 else 8 if span < 25 else 6 if span < 50 else 4
@@ -254,24 +242,23 @@ def render(k):
         gg = norm_lon(gg, shift)
         if not gg.intersects(vb): continue
         cl = gg.intersection(vb)
-        wd = S * (2.6 if p['scalerank'] <= 2 else 2 if p['scalerank'] <= 5 else 1.4)
+        wd = S * (1.7 if p['scalerank'] <= 2 else 1.25 if p['scalerank'] <= 5 else .9)
         for ln in polys(cl):
             if ln.geom_type != 'LineString' or len(ln.coords) < 2: continue
-            line(ring(ln.coords), (70, 125, 170, 235), wd, .6, int(ln.length * 100))
+            line(ring(ln.coords), (92, 140, 176, 255), wd)
         if p.get('name') and cg.intersects(gg): rivlabels.append((gg.intersection(cg), p))
     # contornos de lagos e costas
     for l, p in lakes:
         for pp in polys(l):
-            if hasattr(pp, 'exterior'): line(ring(pp.exterior.coords), (70, 125, 170, 200), S * 1.1, .4)
+            if hasattr(pp, 'exterior'): line(ring(pp.exterior.coords), (120, 160, 188, 255), S * .8)
     for p in NEARLAND:
         for pp in polys(p):
-            if hasattr(pp, 'exterior') and pp.exterior.length > 0: line(ring(pp.exterior.coords), (95, 80, 60, 210), S * 1.2, .5)
+            if hasattr(pp, 'exterior') and pp.exterior.length > 0: line(ring(pp.exterior.coords), (120, 136, 144, 255), S * .7)
     # fronteiras vizinhas
     for iso, gg, nm in others:
         for pp in polys(gg.intersection(vb)):
             if hasattr(pp, 'exterior'):
-                pts = wobble(densify(ring(pp.exterior.coords), 6 * S), .5 * S, seed)
-                for i in range(0, len(pts) - 2, 3): d.line(pts[i:i + 3], fill=(120, 100, 80, 150), width=S)
+                d.line(ring(pp.exterior.coords), fill=(150, 144, 134, 255), width=max(1, int(S * .8)))
 
     # montanhas
     rng = random.Random(seed)
@@ -290,7 +277,7 @@ def render(k):
         if not gg2.intersects(view): continue
         inter = gg2.intersection(view)
         apx = inter.area * sx * sx / cosm
-        if fc == 'Range/mtn' and apx > (msz * 2.2) ** 2 and span > 4:
+        if False:
             step = msz * (2.1 if span > 12 else 2.8)
             bx0, by0, bx1, by1 = inter.bounds
             yy = by1
@@ -308,7 +295,7 @@ def render(k):
         nm = RTR.get(p['NAME'], p.get('NAME_PT') or p['NAME'])
         if fc in ('Range/mtn', 'Desert', 'Plateau', 'Plain', 'Basin', 'Lowland', 'Wetlands', 'Delta', 'Tundra', 'Valley', 'Depression') and apx > (60 * S) ** 2 and inter.intersects(cg):
             rp = inter.representative_point(); X, Y = P(rp.x, rp.y)
-            REGL.append((3 + p.get('SCALERANK', 5) * .1 - min(apx / (W * H), .5), nm.upper() if fc != 'Range/mtn' else nm, X, Y, 15 * S, (110, 80, 50), 'sp'))
+            REGL.append((3 + p.get('SCALERANK', 5) * .1 - min(apx / (W * H), .5), nm.upper() if fc != 'Range/mtn' else nm, X, Y, 12.5 * S, (120, 96, 72), 'reg_sp' if fc != 'Range/mtn' else 'reg'))
     LAB += sorted(REGL)[:4]
     # picos
     pc2 = prep(cg.buffer(.05))
@@ -316,9 +303,9 @@ def render(k):
     peaks.sort(key=lambda t: -t[1]['elevation'])
     for gg, p in peaks[:2]:
         gg = norm_lon(gg, shift); X, Y = P(gg.x, gg.y)
-        d.polygon([(X, Y - 7 * S), (X - 6 * S, Y + 4 * S), (X + 6 * S, Y + 4 * S)], fill=(150, 70, 50, 255))
+        d.polygon([(X, Y - 5 * S), (X - 4.5 * S, Y + 3 * S), (X + 4.5 * S, Y + 3 * S)], fill=(60, 50, 44, 255))
         nm = RTR.get(p['name'], p.get('name_pt') or p['name'])
-        LAB.append((1.5, nm, X + 9 * S, Y, 14 * S, (130, 60, 40), 'l'))
+        LAB.append((1.5, nm, X + 7 * S, Y, 11.5 * S, (80, 66, 56), 'l_it'))
     # rios: rótulos (os maiores)
     rivlabels.sort(key=lambda t: t[1]['scalerank'])
     seen = set()
@@ -329,7 +316,7 @@ def render(k):
         ls = max(polys(gg), key=lambda x: x.length) if hasattr(gg, 'geoms') else gg
         if ls.length * sx < 120 * S: continue
         q = ls.interpolate(.5, normalized=True); X, Y = P(q.x, q.y)
-        LAB.append((2.5, 'rio ' + RTR.get(nm, nm), X, Y - 8 * S, 14 * S, (50, 100, 150), 'c'))
+        LAB.append((2.5, 'rio ' + RTR.get(nm, nm), X, Y - 7 * S, 11.5 * S, (62, 110, 148), 'c_it'))
     # mares
     for gg, p in MAR:
         gg2 = norm_lon(gg, shift)
@@ -339,13 +326,13 @@ def render(k):
         rp = inter.representative_point(); X, Y = P(rp.x, rp.y)
         if land[int(min(Y, H - 1)), int(min(X, W - 1))] > .5: continue
         nm = RTR.get(p['name'], p.get('name_pt') or p['name'])
-        LAB.append((4 + p.get('scalerank', 5) * .05, nm, X, Y, 16 * S, (60, 110, 145), 'c'))
+        LAB.append((4 + p.get('scalerank', 5) * .05, nm, X, Y, 13 * S, (70, 116, 150), 'c_it'))
     # países vizinhos
     for iso, gg, nm in others:
         inter = gg.intersection(view)
         if inter.area * sx * sx / cosm < (70 * S) ** 2: continue
         rp = max(polys(inter), key=lambda x: x.area).representative_point(); X, Y = P(rp.x, rp.y)
-        LAB.append((5, NAMES.get(iso, nm).upper(), X, Y, 14 * S, (140, 125, 100), 'sp'))
+        LAB.append((5, NAMES.get(iso, nm).upper(), X, Y, 10.5 * S, (150, 146, 138), 'nb_sp'))
     # cidades
     cgb = cg.buffer(.15); bb = cgb.bounds
 
@@ -359,12 +346,12 @@ def render(k):
     for gg, p in cap[:1]:
         gg = norm_lon(gg, shift); X, Y = P(gg.x, gg.y)
         MARK.append(('s', X, Y))
-        LAB.append((0, CAPS.get(k) or p['name'], X + 12 * S, Y, 19 * S, (60, 40, 30), 'lb'))
+        LAB.append((0, CAPS.get(k) or p['name'], X + 9 * S, Y, 15 * S, (25, 25, 25), 'l_cap'))
     for gg, p in rest[:ncity]:
         gg = norm_lon(gg, shift); X, Y = P(gg.x, gg.y)
         if any(math.hypot(X - c[2], Y - c[3]) < 30 * S for c in LAB if c[0] < 1): continue
         MARK.append(('c', X, Y))
-        LAB.append((.5, RTR.get(p['name'], p['name']), X + 8 * S, Y, 16 * S, (60, 40, 30), 'l'))
+        LAB.append((.5, RTR.get(p['name'], p['name']), X + 6 * S, Y, 12.5 * S, (40, 40, 40), 'l_city'))
 
     # contorno do país (traço duplo)
     for p in polys(cg):
@@ -372,24 +359,28 @@ def render(k):
         r = ring(p.exterior.coords)
         if len(r) < 3: continue
         per = sum(math.hypot(r[i+1][0]-r[i][0], r[i+1][1]-r[i][1]) for i in range(len(r)-1))
-        if per > 260 * S: line(r, (150, 60, 45, 85), S * 4.5, 1.2, 1)
-        line(r, (110, 40, 30, 255), S * (2 if per > 120 * S else 1.2), .7 if per > 120 * S else .3, 2)
+        if per > 200 * S: line(r, (255, 255, 255, 150), S * 4)
+        line(r, (70, 60, 56, 255), S * (1.6 if per > 120 * S else 1))
 
     for t_, X, Y in MARK:
-        if t_ == 's': star(d, X, Y, 9 * S)
-        else: d.ellipse([X - 4 * S, Y - 4 * S, X + 4 * S, Y + 4 * S], fill=(250, 245, 235, 255), outline=(60, 40, 30, 255), width=S)
+        if t_ == 's':
+            d.ellipse([X - 5.5 * S, Y - 5.5 * S, X + 5.5 * S, Y + 5.5 * S], fill=(255, 255, 255, 255), outline=(30, 30, 30, 255), width=int(1.4 * S))
+            d.ellipse([X - 2.4 * S, Y - 2.4 * S, X + 2.4 * S, Y + 2.4 * S], fill=(30, 30, 30, 255))
+        else: d.ellipse([X - 2.8 * S, Y - 2.8 * S, X + 2.8 * S, Y + 2.8 * S], fill=(40, 40, 40, 255), outline=(255, 255, 255, 255), width=S)
     # rótulos (com prevenção de sobreposição)
     boxes = [(X - 6 * S, Y - 6 * S, X + 6 * S, Y + 6 * S) for _, X, Y in MARK]
     fonts = {}
-    def F(sz):
-        if sz not in fonts: fonts[sz] = ImageFont.truetype(FONT, int(sz))
-        return fonts[sz]
+    def F(sz, st='l_city'):
+        fam = 'it5' if st.startswith('reg') else 'it' if st.endswith('_it') else 'sans7' if st == 'l_cap' else 'sans6' if st.startswith('nb') else 'sans5'
+        key = (fam, sz)
+        if key not in fonts: fonts[key] = ImageFont.truetype(FONTS[fam], int(sz))
+        return fonts[key]
     used = set()
     for pr, txt, X, Y, sz, col, st in sorted(LAB, key=lambda t: t[0]):
         txt = (txt or '').strip()
         if not txt or txt.replace(' ', '').lower() in used: continue
-        f = F(sz)
-        if st == 'sp': txt = ' '.join(txt)
+        f = F(sz, st)
+        if st.endswith('sp'): txt = '\u2009'.join(txt)
         tw = d.textlength(txt, font=f); th = sz
         if st.startswith('l'): cands = [(X, Y - th * .6, X + tw, Y + th * .5), (X - tw - 24 * S, Y - th * .6, X - 24 * S, Y + th * .5), (X - 12 * S - tw / 2, Y - th * 1.7, X - 12 * S + tw / 2, Y - th * .6), (X - 12 * S - tw / 2, Y + th * .4, X - 12 * S + tw / 2, Y + th * 1.5)]
         else: cands = [(X - tw / 2, Y - th * .6, X + tw / 2, Y + th * .5)]
@@ -401,23 +392,18 @@ def render(k):
         if bx is None: continue
         boxes.append((bx[0] - 4 * S, bx[1] - 2 * S, bx[2] + 4 * S, bx[3] + 2 * S)); used.add(txt.replace(' ', '').lower())
         xy = (bx[0], bx[1] - th * .05)
-        d.text(xy, txt, font=f, fill=col + (255,), stroke_width=int(S * 2.5), stroke_fill=(250, 244, 228, 200))
+        d.text(xy, txt, font=f, fill=col + (255,), stroke_width=int(S * 2), stroke_fill=(255, 255, 255, 190))
 
     # escala e rosa dos ventos
     kmpx = 111.32 * cosm / sx
     km = nice(W * .18 * kmpx); L = km / kmpx
     bx, by = 20 * S, H - 18 * S
-    d.line([(bx, by), (bx + L, by)], fill=(70, 50, 35, 255), width=2 * S)
-    for t in (0, .5, 1): d.line([(bx + L * t, by - 5 * S), (bx + L * t, by + 1 * S)], fill=(70, 50, 35, 255), width=S * 2)
-    d.text((bx + L + 8 * S, by - 12 * S), f"{int(km):,} km".replace(',', '.'), font=F(15 * S), fill=(70, 50, 35, 255))
-    cx, cy = W - 30 * S, 34 * S
-    d.polygon([(cx, cy - 20 * S), (cx - 7 * S, cy + 6 * S), (cx, cy + 1 * S)], fill=(110, 40, 30, 255))
-    d.polygon([(cx, cy - 20 * S), (cx + 7 * S, cy + 6 * S), (cx, cy + 1 * S)], fill=(250, 244, 228, 255), outline=(110, 40, 30, 255))
-    d.text((cx - 5 * S, cy + 7 * S), 'N', font=F(16 * S), fill=(110, 40, 30, 255))
-    # moldura
-    for o_, a in ((5 * S, 255), (9 * S, 140)):
-        pts = wobble(densify([(o_, o_), (W - o_, o_), (W - o_, H - o_), (o_, H - o_), (o_, o_)], 8 * S), .6 * S, seed + o_)
-        d.line(pts, fill=(110, 85, 60, a), width=S * (2 if o_ < 6 * S else 1))
+    d.rectangle([bx, by - 2 * S, bx + L / 2, by + 2 * S], fill=(40, 40, 40, 255))
+    d.rectangle([bx + L / 2, by - 2 * S, bx + L, by + 2 * S], fill=(255, 255, 255, 255), outline=(40, 40, 40, 255), width=S)
+    d.text((bx + L + 7 * S, by - 8 * S), f"{int(km):,} km".replace(',', '.'), font=F(11 * S, 'l_city'), fill=(40, 40, 40, 255), stroke_width=int(1.5 * S), stroke_fill=(255, 255, 255, 190))
+    cx, cy = W - 22 * S, 20 * S
+    d.polygon([(cx, cy), (cx - 5 * S, cy + 13 * S), (cx, cy + 10 * S), (cx + 5 * S, cy + 13 * S)], fill=(40, 40, 40, 255))
+    d.text((cx - 4 * S, cy + 15 * S), 'N', font=F(11 * S, 'l_cap'), fill=(40, 40, 40, 255))
 
     im = im.resize((WF, HF), Image.LANCZOS)
     im.save(f'{OUT}/{k}.webp', 'WEBP', quality=70, method=6)

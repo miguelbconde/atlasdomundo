@@ -505,7 +505,7 @@ function viewCountry(k) {
       <div class="key" style="--c:${c}">${keyHTML}</div>
     </div></header>
     <div class="body">
-      ${o.hm ? sec('Mapa desenhado', `<figure class="hmap"><img id="hmimg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" width="${o.hm.w}" height="${o.hm.h}" alt="Mapa desenhado de ${esc(o.n)}, com relevo, rios, lagos e paisagens naturais" loading="lazy"></figure><div class="hleg">${o.hm.eco.map(([id, pc]) => { const e = D.ECO.find(x => x[0] === id); return e ? `<span><i style="background:${e[2]}"></i>${e[1]}</span>` : ''; }).join('')}<span>★ capital</span><span>○ cidades</span><span style="color:#963c2a">▲ pico</span><span><b style="color:#467da9">~</b> rios e lagos</span></div><p class="src">As cores mostram as grandes paisagens naturais de cada zona de clima, não o uso da terra de hoje. Toque no mapa para ampliar.</p>`) : ''}
+      ${o.hm ? sec('Mapa físico', `<figure class="hmap"><img id="hmimg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" width="${o.hm.w}" height="${o.hm.h}" alt="Mapa físico de ${esc(o.n)}, com relevo, rios, lagos e paisagens naturais" loading="lazy"></figure><div class="hleg">${o.hm.eco.map(([id, pc]) => { const e = D.ECO.find(x => x[0] === id); return e ? `<span><i style="background:${e[2]}"></i>${e[1]}</span>` : ''; }).join('')}<span>◉ capital</span><span>• cidades</span><span>▲ pico</span><span><b style="color:#5c8cb0">~</b> rios e lagos</span></div><p class="src">As cores mostram as grandes paisagens naturais de cada zona de clima, não o uso da terra de hoje. Toque no mapa para ampliar.</p>`) : ''}
       ${F.nome_origem ? sec('O nome', `<p>${esc(F.nome_origem)}</p>`) : ''}
       ${sec('Território e paisagem', [F.relevo && `<p>${esc(F.relevo)}</p>`, F.clima && `<p>${esc(F.clima)}</p>`, F.ponto_mais_alto && `<h3>Ponto mais alto</h3><p>${esc(F.ponto_mais_alto)}</p>`, F.rios && F.rios.length && `<h3>Rios</h3>${lst(F.rios)}`, F.recursos && F.recursos.length && `<h3>Recursos naturais</h3>${lst(F.recursos)}`, `<h3>Mar</h3><p>${s.ll ? 'Sem saída para o mar.' : 'Tem litoral.'} Fica no hemisfério ${s.lat < 0 ? 'Sul' : 'Norte'}.</p>`].filter(Boolean).join(''))}
       ${sec('Economia e dinheiro', [curHTML, F.exporta && F.exporta.length && `<h3>Principais exportações</h3>${plst(F.exporta)}`, F.agricultura && F.agricultura.length && `<h3>Agricultura</h3>${plst(F.agricultura)}`].filter(Boolean).join(''))}
@@ -537,7 +537,7 @@ function viewCountry(k) {
   if ($('#cv')) { const m = curs[0], r = rate(m); const up = () => { const x = parseFloat($('#cv').value) || 0; $('#cvo').textContent = 'R$ ' + money(x / r); }; $('#cv').oninput = up; up(); }
   if (o.tz) startClock(o.tz);
   if ($('#hmimg')) hmap(k).then(u => { if (u && $('#hmimg')) $('#hmimg').src = u; });
-  if ($('#hmimg')) $('#hmimg').onclick = () => openLB($('#hmimg').src, 'Mapa desenhado: ' + esc(o.n));
+  if ($('#hmimg')) $('#hmimg').onclick = () => openLB($('#hmimg').src, 'Mapa físico: ' + esc(o.n));
   bindFigures();
   makeMap($('#mini'), {focus: k, controls: false, noCont: true, flip: store.get('flip', false), label: 'Mapa com ' + o.n + ' em destaque', onTap: x => { if (x !== k) location.hash = 'p/' + x; }});
   document.title = o.n + ' · Atlas do Mundo'; scrollTo(0, 0);
@@ -663,17 +663,17 @@ function viewCredits() {
   main.innerHTML = `<div class="credits"><div class="pagehead"><h1>Créditos e fontes</h1></div>
   <h2>Textos das regiões</h2><p>Escritos para esta edição. Os fatos foram conferidos com fontes públicas (IBGE, ONU, UNESCO, Banco Mundial e outras); as notas da edição explicam correções importantes.</p>
   <h2>Fotografias</h2><p>Fotos do Wikimedia Commons, todas com licença livre (domínio público, CC0, CC BY ou CC BY-SA). O autor e a licença de cada foto estão na legenda, com link para a página original.</p>
-  <h2>Mapas desenhados dos países</h2><p>Feitos para esta edição a partir de dados livres: Natural Earth (contornos, rios, lagos, geleiras, serras, desertos, cidades; domínio público), relevo sombreado Natural Earth (domínio público) e a classificação climática de Köppen-Geiger (Beck et al., 2018, CC BY 4.0, via koppen-climate-lookup), usada para colorir as grandes paisagens naturais. As cores mostram zonas aproximadas, não a vegetação de hoje, que em muitos lugares foi substituída por cidades, pastos e lavouras. Letras: Patrick Hand (SIL OFL).</p>
+  <h2>Mapas físicos dos países</h2><p>Feitos para esta edição a partir de dados livres: Natural Earth (contornos, rios, lagos, geleiras, serras, desertos, cidades; domínio público), relevo sombreado Natural Earth (domínio público) e a classificação climática de Köppen-Geiger (Beck et al., 2018, CC BY 4.0, via koppen-climate-lookup), usada para colorir as grandes paisagens naturais. As cores mostram zonas aproximadas, não a vegetação de hoje, que em muitos lugares foi substituída por cidades, pastos e lavouras. Letras: Literata e Figtree.</p>
   <h2>Fichas dos países</h2><p>CIA World Factbook (domínio público), via factbook.json, traduzido e resumido. Pratos típicos e algumas origens de nomes foram redigidos para esta edição e podem ser revistos.</p>
   <h2>Números</h2><p>População (estimativa para 2025), expectativa de vida, idade mediana, crianças de 0 a 14 anos e mortalidade até 5 anos: Divisão de População das Nações Unidas, World Population Prospects 2024. IDH e anos esperados de escola: PNUD, Relatório de Desenvolvimento Humano 2025. PIB: Banco Mundial (2023, dólares correntes). CO₂ e eletricidade renovável: Our World in Data (Global Carbon Project, Ember, Energy Institute). Câmbio: fawazahmed0/currency-api, do dia indicado em cada ficha.</p>
   <h2>Mapa</h2><p>Natural Earth (domínio público), via world-atlas, na projeção Natural Earth. A opção “Sul em cima” lembra que a orientação “norte em cima” é uma convenção, não uma verdade geográfica.</p>
   <h2>Hinos</h2><p>Gravações do Wikimedia Commons (na maioria da Banda da Marinha dos EUA, domínio público). Melodias de caixinha de música: pacote anthem-scores, convertido de partituras livres (CC BY-SA e domínio público).</p>
   <h2>Ilustrações de produtos e pratos</h2><p>Ícones do projeto OpenMoji (CC BY-SA 4.0), escolhidos por categoria: ilustram o tipo de produto ou prato, não são fotografias do prato daquele país.</p>
   <h2>Bandeiras e vozes</h2><p>Bandeiras: flag-icons (MIT). As palavras são ditas pelas vozes do próprio aparelho.</p>
-  <h2>Letras</h2><p>Literata, Figtree e Patrick Hand (SIL Open Font License).</p>
+  <h2>Letras</h2><p>Literata e Figtree (SIL Open Font License).</p>
   <h2>Créditos das fotografias</h2><p>Lista completa: título do arquivo, autor, licença e endereço da página original no Wikimedia Commons (o endereço aparece como texto, sem link, para que o app não leve as crianças para fora dele).</p>
   <ol class="photocr">${D.ARTS.flatMap(a => a.items.filter(i => i.img && i.cr).map(i => `<li>${esc(i.h || '')} — ${esc(i.cr.replace(/^Foto: /, ''))}${i.src ? `<br><span>${esc((u => { try { return decodeURI(u); } catch (e) { return u; } })(i.src))}</span>` : ''}</li>`)).join('')}</ol>
-  <h2>Licenças</h2><p>Textos, fichas, mapas desenhados, desafios e programação: obra original desta edição. Componentes de terceiros, todos com licença que permite uso comercial com atribuição:</p>
+  <h2>Licenças</h2><p>Textos, fichas, mapas físicos, desafios e programação: obra original desta edição. Componentes de terceiros, todos com licença que permite uso comercial com atribuição:</p>
   <ul class="lst" style="display:block;columns:2 320px">
   <li>Fotografias: Wikimedia Commons; domínio público, CC0, CC BY, CC BY-SA e Licença Arte Livre. A licença e o autor de cada foto estão na legenda e na lista acima.</li>
   <li>Contornos, rios, lagos, relevo e cidades: Natural Earth (domínio público).</li>
