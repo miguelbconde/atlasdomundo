@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-mode="claro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fbfaf6">
+<!--__PWA__-->
+<title>Atlas do Mundo · enciclopédia ilustrada</title>
+<style>
+/*__FONTS__*/
+/* VOICE: uma enciclopédia de verdade para leitores de 6 a 9 anos (e seus adultos): clara, precisa, sem infantilizar.
+   IDEA: o mundo visto do Sul — o Brasil como ponto de partida, mapa que pode virar "sul em cima", câmbio a partir do real.
+   PICTURE: o mapa do mundo por regiões, as fichas de países textos próprios, fotos livres do Wikimedia Commons e mapas desenhados de cada país.
+   COLOUR and TYPE: papel claro, tinta escura, fios finos; uma paleta terrosa por região; Literata nos títulos, Figtree no texto.
+   LAYOUT: artigo de enciclopédia com quadro-resumo lateral; listas e tabelas sóbrias; abas embaixo no celular. */
+:root{
+  --serif:'Literata',Georgia,'Times New Roman',serif; --sans:'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --bg:#fbfaf6;--paper:#ffffff;--bg2:#f2efe8;--ink:#1f2328;--ink2:#4d535b;--ink3:#7c828a;--line:#e3ded3;--line2:#cfc8b9;--link:#1f5f8b;
+  --sea:#d6e8ef;--seaink:#3a6a86;--sea2:#bcd8e3;--grat:rgba(70,110,130,.13);
+  --as:#3c8d5a;--ac:#d2693c;--an:#b8902a;--eu:#5677ad;--af:#c27c2c;--ai:#b8433c;--oc:#2b9493;--aq:#9fb3c4;
+  --ok:#2f8f4e;--bad:#b8433c;color-scheme:light;
+}
+[data-mode=escuro]{--bg:#15181c;--paper:#1c2026;--bg2:#232830;--ink:#eceae4;--ink2:#c3c6cc;--ink3:#8d939b;--line:#2e343c;--line2:#3d444e;--link:#8cc3e8;--sea:#1b2d38;--seaink:#8fb8cf;--sea2:#24404f;--grat:rgba(255,255,255,.06);color-scheme:dark}
+*{box-sizing:border-box;min-width:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 18px/1.55 var(--sans);overflow-x:clip;padding-bottom:calc(70px + env(safe-area-inset-bottom))}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:var(--link);text-decoration:none}
+a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.15;margin:0;letter-spacing:-.005em}
+.bands{height:4px;display:flex}.bands i{flex:1}
+header.top{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
+.bar{display:flex;align-items:center;gap:14px;max-width:1240px;margin:0 auto;padding:10px 18px}
+.logo{display:flex;align-items:baseline;gap:10px;color:var(--ink);margin-right:auto}
+.logo:hover{text-decoration:none}
+.logo b{font:600 23px/1 var(--serif)}
+.logo small{font:500 12.5px/1 var(--sans);color:var(--ink3);letter-spacing:.06em;text-transform:uppercase}
+.ib{width:40px;height:40px;border:1px solid var(--line2);background:var(--paper);border-radius:6px;display:grid;place-items:center;flex:none}
+.ib svg{width:21px;height:21px;stroke:var(--ink2);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ib.off svg .w{display:none}.ib:not(.off) svg .x{display:none}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--paper);border-top:1px solid var(--line);padding:4px 4px calc(4px + env(safe-area-inset-bottom));display:flex;justify-content:center}
+nav.tabs a{flex:1;max-width:140px;display:flex;flex-direction:column;align-items:center;gap:1px;padding:5px 2px;color:var(--ink3);font:600 12px var(--sans);border-top:2px solid transparent}
+nav.tabs a:hover{text-decoration:none;color:var(--ink)}
+nav.tabs a svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+nav.tabs a[aria-current=page]{color:var(--ink);border-top-color:var(--ink)}
+main{max-width:1240px;margin:0 auto;padding:10px 18px 40px}
+.loading{padding:60px 0;text-align:center;color:var(--ink3)}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 14px;border:1px solid var(--line2);border-radius:6px;background:var(--paper);font:600 15.5px var(--sans);color:var(--ink)}
+.btn:hover{border-color:var(--ink3);text-decoration:none}
+.btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.btn.solid{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:6px;overflow:hidden;flex:none}
+.seg button,.seg a{border:0;background:var(--paper);padding:7px 12px;font:600 14px var(--sans);color:var(--ink2);border-right:1px solid var(--line)}
+.seg>*:last-child{border-right:0}
+.seg [aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 12px}
+.chip{border:1px solid var(--line2);background:var(--paper);border-radius:4px;padding:5px 10px;font:600 14.5px var(--sans);color:var(--ink2);display:inline-flex;align-items:center;gap:7px}
+.chip:hover{text-decoration:none;border-color:var(--ink3)}
+.chip i{width:10px;height:10px;border-radius:2px;flex:none}
+.chip[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.pagehead{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:14px 0 12px;border-bottom:1px solid var(--line);margin-bottom:14px}
+.pagehead h1{font-size:clamp(30px,4.5vw,42px)}
+.pagehead p{margin:4px 0 0;color:var(--ink2);max-width:46em}
+.kick{font:700 12px var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
+
+/* mapa */
+.mapbox{position:relative;border:1px solid var(--line);border-radius:4px;overflow:hidden;background:var(--sea);height:min(68vh,640px)}
+.mapbox.mini{height:200px}
+.mapbox.game{height:min(56vh,540px)}
+.mapbox svg{display:block;width:100%;height:100%;touch-action:none;user-select:none;-webkit-user-select:none}
+.mapbox .grat{fill:none;stroke:var(--grat);stroke-width:.6;vector-effect:non-scaling-stroke}
+.cty{stroke:var(--paper);stroke-width:.6;vector-effect:non-scaling-stroke;stroke-linejoin:round;cursor:pointer;opacity:.82}
+.cty:hover{opacity:1}
+.cty.me{opacity:1;stroke:var(--ink);stroke-width:1.6}
+svg.focus .cty:not(.me){opacity:.35}
+.cty.hi{opacity:1;stroke:var(--ink);stroke-width:1.6}
+.dot{stroke:var(--paper);vector-effect:non-scaling-stroke;stroke-width:.8;cursor:pointer;opacity:.85}
+.lab{font-family:var(--sans);font-weight:600;fill:var(--ink);paint-order:stroke;stroke:color-mix(in srgb,var(--paper) 85%,transparent);stroke-linejoin:round;pointer-events:none;text-anchor:middle}
+.ref{fill:none;stroke:var(--ink2);stroke-width:.7;stroke-dasharray:4 4;vector-effect:non-scaling-stroke;opacity:.35;pointer-events:none}
+.ref.eq{stroke-dasharray:none;opacity:.4}
+.rlab{font-family:var(--sans);font-style:italic;fill:var(--ink2);opacity:.6;pointer-events:none;text-anchor:middle}
+.olab{font-family:var(--serif);font-style:italic;fill:var(--seaink,#3d6f8f);opacity:.75;pointer-events:none;text-anchor:middle;letter-spacing:.22em}
+.clab{font-family:var(--sans);font-weight:700;fill:#fff;opacity:.92;paint-order:stroke;stroke:rgba(0,0,0,.18);stroke-width:.6px;pointer-events:none;text-anchor:middle;letter-spacing:.16em}
+.mctl{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:6px;z-index:2}
+.mfoot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px;font-size:14.5px;color:var(--ink3)}
+
+/* listas */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px 16px}
+.fc{display:flex;gap:10px;align-items:center;color:var(--ink);padding:6px 0;border-bottom:1px solid var(--line)}
+.fc:hover{text-decoration:none}.fc:hover b{text-decoration:underline}
+.fc img{width:44px;flex:none}
+.fc b{font:600 16px/1.2 var(--sans);display:block}
+.fc small{color:var(--ink3);font-size:13.5px}
+.flag{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;box-shadow:0 0 0 1px rgba(0,0,0,.12);background:#fff}
+.ghead{grid-column:1/-1;display:flex;align-items:center;gap:8px;margin:18px 0 2px;font:600 21px var(--serif)}
+.ghead i{width:12px;height:12px;border-radius:2px}
+.search{position:relative;margin:4px 0 8px;max-width:520px}
+.search input{width:100%;height:46px;border-radius:6px;border:1px solid var(--line2);background:var(--paper);padding:0 14px 0 42px;font:500 17px var(--sans);color:var(--ink)}
+.search input:focus{outline:2px solid var(--link);outline-offset:0}
+.search svg{position:absolute;left:13px;top:13px;width:20px;height:20px;stroke:var(--ink3);fill:none;stroke-width:2}
+
+/* artigo de país */
+.art{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:28px;align-items:start}
+.ahead{grid-column:1/-1;display:flex;gap:22px;align-items:center;padding:16px 0 18px;border-bottom:1px solid var(--line)}
+.ahead .fl{width:min(200px,34vw);flex:none;display:flex;flex-direction:column;gap:8px}
+.ahead{align-items:flex-start}.ahead .hm{flex:1;min-width:0}
+.hino{display:flex;gap:8px;align-items:flex-start;font-size:13.5px;line-height:1.3;color:var(--ink2)}
+.hino .btn{flex:none;padding:6px 10px;font-size:14px}
+.hino small{display:block;color:var(--ink3);font-size:12px}
+.key{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));border-top:1px solid var(--line);border-left:1px solid var(--line);margin-top:14px}
+.key .stat .v{font-size:18px}.key .stat .rk{font-size:12.5px}
+.key .clk .v{font-variant-numeric:tabular-nums}
+.ahead h1{font-size:clamp(34px,5.5vw,56px)}
+.ahead .sub{color:var(--ink2);margin-top:6px;display:flex;gap:6px 14px;flex-wrap:wrap;align-items:center}
+.ahead .sub .tag{display:inline-flex;align-items:center;gap:6px;font-weight:600}
+.ahead .sub .tag i{width:10px;height:10px;border-radius:2px}
+.speak{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line2);background:var(--paper);border-radius:999px;padding:4px 12px 4px 8px;font:500 15px var(--sans);color:var(--ink)}
+.speak svg{width:17px;height:17px;stroke:var(--ink2);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.speak.on svg{stroke:var(--link)}
+.body section{padding:18px 0;border-bottom:1px solid var(--line)}
+.body section:last-child{border-bottom:0}
+.body h2{font-size:25px;margin-bottom:8px}
+.body h3{font:700 13px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin:14px 0 4px}
+.body p{margin:0 0 .6em;max-width:44em}
+.lst{margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px}
+.lst li{border:1px solid var(--line);background:var(--paper);border-radius:4px;padding:3px 9px;font-size:16px}
+.plst{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.plst li{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:var(--paper);border-radius:4px;padding:6px 10px 6px 6px;font-size:15.5px;line-height:1.25}
+.plst img{width:40px;height:40px;flex:none;background:var(--bg2);border-radius:3px;padding:3px}
+.dishes{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.dish{display:grid;grid-template-columns:64px minmax(0,1fr);gap:12px;align-items:start;border-top:3px solid var(--c);padding-top:10px}
+.dish img{width:64px;height:64px;background:var(--bg2);border-radius:4px;padding:6px}
+.dish b{font:600 19px var(--serif);display:block}
+.dish span{color:var(--ink2);font-size:16px}
+.words{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.word{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;border:1px solid var(--line);background:var(--paper);border-radius:4px;padding:10px 12px}
+.word:hover{border-color:var(--ink3)}
+.word .pt{font:700 11.5px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);display:flex;gap:6px;align-items:center}
+.word .pt svg{width:14px;height:14px;stroke:var(--ink3);fill:none;stroke-width:2}
+.word .fx{font:600 22px/1.2 var(--serif)}
+.word .pr{font-size:14.5px;color:var(--ink2)}
+.word.on{border-color:var(--link)}
+.cur{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:8px}
+.cur div{border:1px solid var(--line);background:var(--paper);border-radius:4px;padding:10px 12px}
+.cur b{font:600 20px var(--serif);display:block}
+.cur small{color:var(--ink3);font-size:13.5px}
+.conv{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px}
+.conv input{width:120px;height:40px;border:1px solid var(--line2);border-radius:4px;padding:0 10px;font:600 17px var(--sans);background:var(--paper);color:var(--ink)}
+.conv output{font:600 18px var(--serif)}
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.stat{background:var(--paper);border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:10px 12px;display:flex;flex-direction:column;gap:1px;color:var(--ink)}
+.stat:hover{text-decoration:none;background:var(--bg2)}
+.stat .l{font:700 11.5px var(--sans);text-transform:uppercase;letter-spacing:.07em;color:var(--ink3)}
+.stat .v{font:600 20px/1.2 var(--serif)}
+.stat .rk{font-size:13.5px;color:var(--ink2)}
+.stat .rk b{color:var(--c)}
+.src{font-size:13.5px;color:var(--ink3);margin-top:8px}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px 20px}
+figure.ph{margin:0}
+figure.ph img{display:block;width:100%;height:auto;cursor:zoom-in;background:var(--bg2)}
+figure.ph figcaption{font-size:15px;color:var(--ink2);margin-top:6px;line-height:1.45}
+figure.ph figcaption b{display:block;font:700 12.5px var(--sans);letter-spacing:.07em;text-transform:uppercase;color:var(--ink);margin-bottom:2px}
+.note{border-left:3px solid var(--line2);padding:2px 0 2px 12px;margin:0 0 14px;font-size:15.5px;color:var(--ink2);break-inside:avoid}
+.note b{font:700 12.5px var(--sans);letter-spacing:.07em;text-transform:uppercase;display:block}
+.edit{background:var(--bg2);border-left:3px solid var(--link);padding:8px 12px;font-size:15px;color:var(--ink2);margin:8px 0}
+.nbs{display:flex;flex-wrap:wrap;gap:6px 14px}
+.nbs a{display:inline-flex;align-items:center;gap:7px;color:var(--ink);font-size:16px}
+.nbs img{width:26px}
+aside.box{position:sticky;top:76px;border:1px solid var(--line);background:var(--paper)}
+aside.box .t{padding:10px 14px;border-bottom:1px solid var(--line);font:600 17px var(--serif)}
+aside.box .mapbox{border:0;border-bottom:1px solid var(--line);border-radius:0}
+dl.facts{margin:0;padding:4px 14px 10px;display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:15.5px}
+dl.facts dt{color:var(--ink3);font-size:13.5px;padding-top:2px}
+dl.facts dd{margin:0;font-weight:600}
+.photocr{font-size:13px;color:var(--ink2);padding-left:22px;columns:2 360px;column-gap:28px}.photocr li{break-inside:avoid;margin-bottom:6px}.photocr span{color:var(--ink3);word-break:break-all;font-size:12px}
+.cr{display:block;font-size:11.5px;color:var(--ink3);margin-top:4px}.cr a{color:inherit}
+.hmap{margin:0}.hmap img{display:block;max-width:100%;max-height:78vh;width:auto;height:auto;margin:0 auto;border:1px solid var(--line);cursor:zoom-in;background:#f4ecd8}
+.hleg{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px;font-size:14px;color:var(--ink2)}.hleg span{display:inline-flex;align-items:center;gap:6px}.hleg i{width:14px;height:14px;border-radius:2px;border:1px solid rgba(0,0,0,.15);flex:none}
+.anth{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.anth small{display:block;color:var(--ink3);font-size:13.5px}
+
+/* regiões */
+.regs{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px 22px}
+.reg{display:flex;flex-direction:column;gap:6px;color:var(--ink)}
+.reg:hover{text-decoration:none}.reg:hover b{text-decoration:underline}
+.reg img{width:100%;aspect-ratio:3/2;object-fit:cover;background:var(--bg2)}
+.reg .ph0{width:100%;aspect-ratio:3/2;background:var(--bg2)}
+.reg b{font:600 20px/1.2 var(--serif)}
+.reg small{color:var(--ink3);font-size:14px}
+.lede{font:400 20px/1.6 var(--serif);max-width:40em;margin:8px 0 14px}
+.lede::first-letter{font-size:1.15em}
+.flagrow{display:flex;flex-wrap:wrap;gap:8px 14px;margin:4px 0 18px}
+.flagrow a{display:inline-flex;align-items:center;gap:7px;color:var(--ink);font-size:15.5px}
+.flagrow img{width:28px}
+
+/* números */
+.rank{border-top:1px solid var(--line)}
+.rrow{display:grid;grid-template-columns:40px 34px minmax(0,1fr) auto;gap:12px;align-items:center;padding:7px 4px;border-bottom:1px solid var(--line);color:var(--ink)}
+.rrow:hover{text-decoration:none;background:var(--bg2)}
+.rrow.me{background:color-mix(in srgb,var(--as) 10%,transparent)}
+.rrow .n{font:600 16px var(--serif);color:var(--ink3);text-align:right}
+.rrow img{width:34px}
+.rrow>span{display:block}
+.rrow b{font:600 16px/1.2 var(--sans);display:block}
+.rrow .tr{display:block;height:6px;background:var(--bg2);margin-top:5px}
+.rrow .tr i{display:block;height:100%}
+.rrow .val{font:600 15.5px var(--sans);text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+
+/* jogos */
+.games{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.gcard{border:1px solid var(--line);background:var(--paper);padding:16px;color:var(--ink);display:flex;flex-direction:column;gap:6px}
+.gcard:hover{text-decoration:none;border-color:var(--ink3)}
+.gcard b{font:600 21px var(--serif)}
+.gcard span{color:var(--ink2);font-size:16px}
+.qwrap{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:14px;padding-top:10px}
+.qtop{display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--ink3);font-weight:600}
+.qflag{width:min(320px,76vw);margin:0 auto}
+.qq{text-align:center;font:600 24px/1.25 var(--serif)}
+.opts{display:grid;gap:8px}
+.opt{display:flex;align-items:center;gap:10px;min-height:52px;border:1px solid var(--line2);border-radius:4px;padding:6px 14px 6px 6px;background:var(--paper);font:600 19px var(--sans);text-align:left}
+.opt:hover{border-color:var(--ink3)}
+.opt .spk{width:40px;height:40px;border:0;background:var(--bg2);border-radius:4px;display:grid;place-items:center;flex:none}
+.opt .spk svg{width:20px;height:20px;stroke:var(--ink2);fill:none;stroke-width:2}
+.opt.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.opt.no{background:var(--bad);border-color:var(--bad);color:#fff}
+.opts.fl{grid-template-columns:repeat(3,1fr)}
+.opts.fl .opt{flex-direction:column;padding:8px}
+.opt img{width:100px}
+
+#lb{position:fixed;inset:0;z-index:80;background:rgba(15,17,20,.94);display:none;touch-action:none}
+#lb.on{display:block}
+#lb .stage{position:absolute;inset:0;overflow:hidden}
+#lb img{position:absolute;left:0;top:0;transform-origin:0 0;max-width:none;user-select:none;-webkit-user-drag:none}
+#lb .x{position:absolute;right:12px;top:calc(12px + env(safe-area-inset-top));width:46px;height:46px;border:0;border-radius:4px;background:#fff;font:600 26px/1 var(--sans);color:#222}
+#lb .cap{position:absolute;left:0;right:0;bottom:0;padding:14px 18px calc(14px + env(safe-area-inset-bottom));background:linear-gradient(transparent,rgba(0,0,0,.75));color:#eee;font-size:15.5px;max-height:40vh;overflow:auto}
+#toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translate(-50%,10px);background:var(--ink);color:var(--bg);font:500 15.5px var(--sans);padding:10px 16px;border-radius:4px;opacity:0;transition:.2s;pointer-events:none;z-index:90;max-width:90vw;text-align:center}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+.credits{max-width:760px;font-size:16px;color:var(--ink2)}
+.credits h2{color:var(--ink);font-size:21px;margin:20px 0 4px}
+
+@media (min-width:900px){
+  body{padding-bottom:0}
+  nav.tabs{position:static;border:0;background:none;padding:0;justify-content:flex-end;gap:2px}
+  nav.tabs a{flex:none;flex-direction:row;gap:7px;padding:8px 10px;font-size:15px;border-top:0;border-bottom:2px solid transparent}
+  nav.tabs a svg{width:20px;height:20px}
+  nav.tabs a[aria-current=page]{border-bottom-color:var(--ink)}
+  #toast{bottom:28px}
+}
+@media (max-width:899px){.bar .tabs-slot{display:none}.art{grid-template-columns:minmax(0,1fr)}.ahead{order:-2}aside.box{position:static;order:-1}}
+
+@media (max-width:640px){.key{grid-template-columns:repeat(2,minmax(0,1fr))}.key .clk{grid-column:span 2}.ahead .fl{width:auto!important;flex-direction:row;align-items:flex-end;gap:12px}.ahead .fl .flag{width:140px;flex:none}
+  body{font-size:17px}
+  .logo small{display:none}
+  .ahead{flex-direction:column;align-items:flex-start;gap:12px}
+  .ahead .fl{width:150px}
+  .mapbox{height:min(96vw,62vh)}
+  .rrow{grid-template-columns:30px 30px minmax(0,1fr) auto;gap:8px}
+  .rrow img{width:30px}
+  .opts.fl{grid-template-columns:repeat(2,1fr)}
+  .qq{font-size:21px}
+  .lede{font-size:18.5px}
+}
+/* celular e tablet */
+button,a,.chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.chip{min-height:38px}
+@media (max-width:1024px){.mapview .mapbox{height:calc(100dvh - 300px);min-height:340px}.chips.scroll{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}.chips.scroll::-webkit-scrollbar{display:none}.chips.scroll .chip{flex:none}}
+@media (max-width:640px){
+  .rk-chips{}
+  .mapview .pagehead{padding:6px 0 8px;margin-bottom:6px;align-items:center;flex-wrap:nowrap}
+  .mapview .pagehead h1{font-size:24px}
+  .mapview .pagehead p,.mapview .mfoot{display:none}
+  .mapview .seg button{padding:6px 9px;font-size:13px}
+  .chips.scroll{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -16px 8px;padding:0 16px 2px}
+  .chips.scroll::-webkit-scrollbar{display:none}
+  .chips.scroll .chip{flex:none}
+  .mapview .mapbox{height:calc(100dvh - 205px - env(safe-area-inset-bottom));min-height:300px;margin:0 -16px;border-left:0;border-right:0;border-radius:0}
+  .mctl .ib{width:42px;height:42px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media print{header.top,nav.tabs,.mctl{display:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="bands" aria-hidden="true"><i style="background:var(--as)"></i><i style="background:var(--ac)"></i><i style="background:var(--an)"></i><i style="background:var(--af)"></i><i style="background:var(--eu)"></i><i style="background:var(--ai)"></i><i style="background:var(--oc)"></i></div>
+  <div class="bar">
+    <a class="logo" href="#"><b>Atlas do Mundo</b><small>enciclopédia ilustrada</small></a>
+    <div class="tabs-slot"></div>
+    <button class="ib" id="snd" aria-label="Ligar ou desligar o som"><svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z"/><path class="w" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/><path class="x" d="M17 9l5 6M22 9l-5 6"/></svg></button>
+    <button class="ib" id="mode" aria-label="Modo escuro"></button>
+  </div>
+</header>
+<nav class="tabs" aria-label="Seções">
+  <a href="#" data-t="mapa"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg>Mapa</a>
+  <a href="#paises" data-t="paises"><svg viewBox="0 0 24 24"><path d="M5 21V4M5 4h12l-3 4 3 4H5"/></svg>Países</a>
+  <a href="#regioes" data-t="regioes"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 15l5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.5"/></svg>Regiões</a>
+  <a href="#numeros" data-t="numeros"><svg viewBox="0 0 24 24"><path d="M5 20V11M12 20V5M19 20v-6M3 20h18"/></svg>Números</a>
+  <a href="#jogos" data-t="jogos"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7M12 17h.01"/></svg>Desafios</a>
+</nav>
+<main id="main" tabindex="-1"><p class="loading">Abrindo o atlas…</p></main>
+<div id="lb" role="dialog" aria-modal="true" aria-label="Imagem ampliada"><div class="stage"><img alt=""></div><button class="x" aria-label="Fechar">×</button><div class="cap"></div></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<!--__DATA__-->
+<script>
+{
+const EMBED = /*__EMBED__*/true;
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+const norm = s => (s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const store = {get(k, d) { try { const v = localStorage.getItem('atlas2.' + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem('atlas2.' + k, JSON.stringify(v)); } catch (e) {} }};
+const CH = {};
+async function chunk(k) { if (CH[k]) return CH[k]; const bin = Uint8Array.from(atob(document.getElementById('c-' + k).textContent.trim()), c => c.charCodeAt(0)); return (CH[k] = JSON.parse(await new Response(new Blob([bin]).stream().pipeThrough(new DecompressionStream('gzip'))).text())); }
+const IU = {};
+function blob(id, type) { if (IU[id]) return IU[id]; const el = document.getElementById(id); if (!el) return ''; const bin = Uint8Array.from(atob(el.textContent.trim()), c => c.charCodeAt(0)); return (IU[id] = URL.createObjectURL(new Blob([bin], {type}))); }
+const HMB = {};
+const hmap = k => EMBED ? Promise.resolve(blob('h-' + k, 'image/webp')) : (HMB[k[0]] = HMB[k[0]] || fetch('h/' + k[0] + '.json').then(r => r.json())).then(j => j[k] ? URL.createObjectURL(new Blob([Uint8Array.from(atob(j[k]), c => c.charCodeAt(0))], {type: 'image/webp'})) : '');
+const photo = n => EMBED ? blob('i-' + n, 'image/webp') : 'f/' + n + '.webp';
+const recURL = k => EMBED ? blob('a-' + k, 'audio/mpeg') : 'a/' + k + '.mp3';
+let D, FL, MP, BYK = {}, REC = {};
+const main = $('#main');
+const CT = {as: 'América do Sul', ac: 'América Central e Caribe', an: 'América do Norte', eu: 'Europa', af: 'África', ai: 'Ásia', oc: 'Oceania', aq: 'Antártida'};
+const CTO = ['as', 'ac', 'an', 'af', 'eu', 'ai', 'oc', 'aq'];
+const col = c => `var(--${c})`;
+const FU = {};
+const flag = k => FU[k] || (FU[k] = FL[k] ? 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(FL[k]) : '');
+function toast(m, t = 2800) { const e = $('#toast'); e.textContent = m; e.classList.add('on'); clearTimeout(toast.h); toast.h = setTimeout(() => e.classList.remove('on'), t); }
+const ICON = {spk: '<svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>', play: '<svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z" fill="currentColor" stroke="none"/></svg>', stop: '<svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" fill="currentColor" stroke="none"/></svg>', left: '<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>', plus: '<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>', minus: '<svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg>', home: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M4 12h16"/></svg>', flip: '<svg viewBox="0 0 24 24"><path d="M12 3v18M7 8l5-5 5 5M7 16l5 5 5-5"/></svg>'};
+const nf = (x, d = 0) => Number(x).toLocaleString('pt-BR', {maximumFractionDigits: d});
+function big(x) { if (x >= 1e12) return nf(x / 1e12, 2) + ' trilhões'; if (x >= 1e9) return nf(x / 1e9, 1) + ' bilhões'; if (x >= 2e6) return nf(x / 1e6, 1) + ' milhões'; if (x >= 1e6) return nf(x / 1e6, 2) + ' milhão'; if (x >= 1e4) return nf(x / 1e3, 0) + ' mil'; return nf(x); }
+
+/* som e tema */
+let SND = store.get('snd', true);
+function setSnd() { $('#snd').classList.toggle('off', !SND); $('#snd').setAttribute('aria-pressed', SND); }
+$('#snd').onclick = () => { SND = !SND; store.set('snd', SND); setSnd(); if (!SND) { stopAll(); } };
+setSnd();
+function applyMode() { const m = store.get('mode', 'claro'); document.documentElement.dataset.mode = m; $('#mode').innerHTML = m === 'claro' ? '<svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4 6.5 6.5 0 0 0 20 14.5z"/></svg>' : '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>'; $('#mode').setAttribute('aria-label', m === 'claro' ? 'Modo escuro' : 'Modo claro'); }
+$('#mode').onclick = () => { store.set('mode', store.get('mode', 'claro') === 'claro' ? 'escuro' : 'claro'); applyMode(); };
+applyMode();
+
+/* vozes */
+let VO = [];
+function loadV() { try { VO = speechSynthesis.getVoices(); } catch (e) {} }
+if ('speechSynthesis' in window) { loadV(); speechSynthesis.onvoiceschanged = loadV; }
+function voiceFor(lang) { const L = lang.toLowerCase(), b = L.split('-')[0]; const vs = VO.map(v => [v, v.lang.toLowerCase().replace('_', '-')]); const best = a => (a.find(([v]) => /natural|google|premium|enhanced/i.test(v.name)) || a[0] || [])[0]; return best(vs.filter(([, l]) => l === L)) || best(vs.filter(([, l]) => l.split('-')[0] === b)) || null; }
+const hasVoice = l => !!voiceFor(l);
+function say(text, lang = 'pt-BR', onend) {
+  if (!SND) { toast('O som está desligado (botão do alto-falante, lá em cima).'); return false; }
+  if (!('speechSynthesis' in window)) return false; const v = voiceFor(lang); if (!v) return false;
+  speechSynthesis.cancel(); stopAudio();
+  const u = new SpeechSynthesisUtterance(text); u.lang = v.lang; u.voice = v; u.rate = lang.startsWith('pt') ? .95 : .82; if (onend) { u.onend = onend; u.onerror = onend; } speechSynthesis.speak(u); return true;
+}
+
+/* áudio: gravações e caixinha de música */
+let AC = null, AN_NODES = [], CUR = null;
+function ac() { if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return null; } } if (AC.state === 'suspended') AC.resume(); return AC; }
+function tone(f, t, d, g, type, out) { const a = ac(); const o = a.createOscillator(), v = a.createGain(); o.type = type; o.frequency.setValueAtTime(f, t); v.gain.setValueAtTime(0, t); v.gain.linearRampToValueAtTime(g, t + .01); v.gain.exponentialRampToValueAtTime(.0008, t + d); o.connect(v).connect(out); o.start(t); o.stop(t + d + .05); return o; }
+function stopAudio() { AN_NODES.forEach(o => { try { o.stop(); } catch (e) {} }); AN_NODES = []; if (CUR) { if (CUR.el) try { CUR.el.pause(); } catch (e) {} clearTimeout(CUR.t); if (CUR.btn) CUR.btn.innerHTML = CUR.label; CUR = null; } }
+function stopAll() { stopAudio(); try { speechSynthesis.cancel(); } catch (e) {} }
+function playAnthem(k, btn) {
+  if (CUR && CUR.btn === btn) { stopAudio(); return; }
+  stopAll(); if (!SND) { toast('O som está desligado (botão do alto-falante, lá em cima).'); return; }
+  const label = btn.innerHTML;
+  if (REC[k]) { const el = new Audio(recURL(k)); CUR = {el, btn, label}; btn.innerHTML = ICON.stop + 'Parar'; el.onended = stopAudio; el.play().catch(() => { toast('Não foi possível tocar o áudio.'); stopAudio(); }); return; }
+  const o = BYK[k]; if (!o.an) return; const A = D.AN[o.an.f]; const a = ac(); if (!a) return; const spb = 60 / A.bpm, t0 = a.currentTime + .1;
+  const m = a.createGain(); m.gain.value = .9; m.connect(a.destination);
+  const mb = (n, s, d, g) => { const f = 440 * Math.pow(2, (n - 69) / 12), t = t0 + s * spb, dd = Math.max(.4, Math.min(d * spb * 1.6, 2.2)); AN_NODES.push(tone(f, t, dd, g, 'sine', m)); AN_NODES.push(tone(f * 2, t, dd * .5, g * .18, 'triangle', m)); };
+  let end = 0; A.melody.forEach(([s, n, d]) => { mb(n, s, d, .2); end = Math.max(end, s + d); }); A.bass.forEach(([s, n, d]) => mb(n, s, d, .1)); A.inner.forEach(([s, ns, d]) => ns.forEach(n => mb(n, s, d, .05)));
+  CUR = {btn, label, t: setTimeout(stopAudio, (end * spb + 2) * 1000)}; btn.innerHTML = ICON.stop + 'Parar';
+}
+
+/* mapa */
+function contBox(c) { let b = [1e9, 1e9, -1e9, -1e9]; D.C.forEach(o => { if (o.ct === c && o.pt && o.pt[3] && (o.a > 15000 || c === 'ac') && !['RU', 'US', 'FR', 'NO', 'GL'].includes(o.k)) { const q = o.pt[3]; b = [Math.min(b[0], q[0]), Math.min(b[1], q[1]), Math.max(b[2], q[2]), Math.max(b[3], q[3])]; } }); if (c === 'an') b = [80, 40, 330, 205]; if (c === 'eu') b = [445, 55, 600, 150]; if (c === 'ai') b = [560, 60, 950, 330]; if (c === 'aq') b = [40, 440, 960, 520]; return b; }
+const LBL = {as: [335, 330], ac: [262, 214], an: [225, 140], eu: [520, 100], af: [515, 270], ai: [705, 150], oc: [855, 360]};
+function makeMap(host, opt = {}) {
+  const FLIP = !!opt.flip, W = MP.W, H = MP.H;
+  const P = (x, y) => FLIP ? [W - x, H - y] : [x, y];
+  const PB = b => FLIP ? [W - b[2], H - b[3], W - b[0], H - b[1]] : b;
+  const NE = (lon, lat) => { const l = lon * Math.PI / 180, p = lat * Math.PI / 180, p2 = p * p, p4 = p2 * p2; return [500 + 180 * l * (0.8707 - 0.131979 * p2 + p4 * (-0.013791 + p4 * (0.003971 * p2 - 0.001529 * p4))), 260 - 180 * p * (1.007226 + p2 * (0.015085 + p4 * (-0.044475 + 0.028874 * p2 - 0.005916 * p4)))]; };
+  const par = lat => 'M' + Array.from({length: 181}, (_, i) => NE(-180 + i * 2, lat).map(n => n.toFixed(1)).join(',')).join('L');
+  const mer = lon => 'M' + Array.from({length: 91}, (_, i) => NE(lon, -90 + i * 2).map(n => n.toFixed(1)).join(',')).join('L');
+  const TR = 23.44, REF = `<path class="ref eq" d="${par(0)}"/><path class="ref" d="${par(TR)}"/><path class="ref" d="${par(-TR)}"/><path class="ref" d="${mer(0)}"/>`;
+  const lab = (lon, lat, t, c, dy = -2.5) => { const q = P(...NE(lon, lat)); return `<text class="${c}" x="${q[0]}" y="${q[1] + dy}" >${t}</text>`; };
+  const RLAB = [[-24, 0, 'Linha do Equador'], [-42, TR, 'Trópico de Câncer'], [-14, -TR, 'Trópico de Capricórnio']].map(a => lab(a[0], a[1], a[2], 'rlab')).join('') + (() => { const q = P(...NE(0, -47)); return `<text class="rlab" x="${q[0]}" y="${q[1]}" transform="rotate(-90 ${q[0]} ${q[1]})" dy="-2.5">Meridiano de Greenwich</text>`; })();
+  const OLAB = [[-140, -8, 'OCEANO PACÍFICO'], [150, 20, 'OCEANO PACÍFICO'], [-40, 36, 'OCEANO ATLÂNTICO'], [-14, -31, 'OCEANO ATLÂNTICO'], [78, -16, 'OCEANO ÍNDICO'], [-10, 85, 'OCEANO GLACIAL ÁRTICO'], [40, -60, 'OCEANO AUSTRAL']].map(a => lab(a[0], a[1], a[2], 'olab', 0)).join('');
+  const tiny = D.C.filter(o => o.pt && (!MP.paths[o.k] || o.pt[2] < 4) && !['AQ', 'UM', 'HM', 'BV'].includes(o.k));
+  host.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${opt.label || 'Mapa do mundo: toque num país'}"><rect x="-3000" y="-3000" width="7000" height="7000" fill="var(--sea)"/><g ${FLIP ? `transform="matrix(-1,0,0,-1,${W},${H})"` : ''}>${REF}<g>${D.C.filter(o => MP.paths[o.k]).map(o => `<path class="cty" data-k="${o.k}" fill="${col(o.ct)}" d="${MP.paths[o.k]}"><title>${esc(o.n)}</title></path>`).join('')}</g><g class="ds">${tiny.map(o => `<circle class="dot" data-k="${o.k}" cx="${o.pt[0]}" cy="${o.pt[1]}" r="2" fill="${col(o.ct)}"><title>${esc(o.n)}</title></circle>`).join('')}</g></g><g class="cl">${opt.noCont ? '' : RLAB + OLAB}</g><g class="ls"></g></svg>` + (opt.controls === false ? '' : `<div class="mctl"><button class="ib" data-z="1" aria-label="Aproximar">${ICON.plus}</button><button class="ib" data-z="-1" aria-label="Afastar">${ICON.minus}</button><button class="ib" data-z="0" aria-label="Ver o mundo todo">${ICON.home}</button></div>`);
+  const svg = $('svg', host), LS = $('.ls', svg), DS = $$('.dot', svg), CL = $('.cl', svg);
+  const labeled = D.C.filter(o => o.pt && MP.paths[o.k] && o.pt[3]);
+  let v = {x: 0, y: 0, w: W, h: H}, anim = null;
+  const fitBox = (b, pad = .1) => { const r = svg.getBoundingClientRect(), ar = r.width / Math.max(1, r.height); let w = (b[2] - b[0]) * (1 + pad * 2), h = (b[3] - b[1]) * (1 + pad * 2); if (w / h > ar) h = w / ar; else w = h * ar; return {x: (b[0] + b[2]) / 2 - w / 2, y: (b[1] + b[3]) / 2 - h / 2, w, h}; };
+  const world = () => { const r = svg.getBoundingClientRect(); if (r.width / Math.max(1, r.height) < 1.15) { const h = 430, w = h * r.width / r.height, cx = FLIP ? W - 430 : 430; return {x: Math.max(0, Math.min(W - w, cx - w / 2)), y: (H - h) / 2, w, h}; } return fitBox([0, 0, W, H], 0); };
+  function apply() {
+    svg.setAttribute('viewBox', `${v.x} ${v.y} ${v.w} ${v.h}`);
+    const r = svg.getBoundingClientRect(), s = r.width / v.w || 1;
+    DS.forEach(d => d.setAttribute('r', (opt.controls === false ? 2.6 : s < 1.5 ? 2.4 : s < 3 ? 3.4 : 5) / s));
+    CL.style.display = s > 2.2 ? 'none' : ''; $$('.clab', CL).forEach(t => t.setAttribute('font-size', 10 / s)); $$('.rlab', CL).forEach(t => t.setAttribute('font-size', 6 / s)); $$('.olab', CL).forEach(t => t.setAttribute('font-size', 6.8 / s));
+    if (opt.noLabels) { LS.innerHTML = ''; return; }
+    const fs = 12.5 / s, out = [], boxes = [];
+    for (const o of labeled.slice().sort((a, b) => b.pt[2] - a.pt[2])) {
+      const q = o.pt[3], bw = (q[2] - q[0]) * s, bh = (q[3] - q[1]) * s, tw = o.n.length * 7;
+      if (bw < tw * .9 && !(bw > 46 && bh > 30 && s > 3)) continue; if (bh < 14) continue;
+      const p = P(o.pt[0], o.pt[1]); const sx = (p[0] - v.x) * s, sy = (p[1] - v.y) * s; if (sx < -50 || sy < -20 || sx > r.width + 50 || sy > r.height + 20) continue;
+      const box = [sx - tw / 2, sy - 9, sx + tw / 2, sy + 9]; if (boxes.some(b => !(box[2] < b[0] || box[0] > b[2] || box[3] < b[1] || box[1] > b[3]))) continue; boxes.push(box);
+      out.push(`<text class="lab" x="${p[0]}" y="${p[1] + fs * .35}" font-size="${fs}" stroke-width="${3 / s}">${esc(o.n)}</text>`);
+    }
+    LS.innerHTML = s > 1.9 ? out.join('') : '';
+  }
+  function animateTo(t) { cancelAnimationFrame(anim); const f = {...v}, t0 = performance.now(), Dd = matchMedia('(prefers-reduced-motion:reduce)').matches ? 1 : 480; const st = now => { const k = Math.min(1, (now - t0) / Dd), e = 1 - Math.pow(1 - k, 3); v = {x: f.x + (t.x - f.x) * e, y: f.y + (t.y - f.y) * e, w: f.w + (t.w - f.w) * e, h: f.h + (t.h - f.h) * e}; apply(); if (k < 1) anim = requestAnimationFrame(st); }; anim = requestAnimationFrame(st); }
+  function zoomAt(f, cx, cy) { const r = svg.getBoundingClientRect(), px = v.x + (cx - r.left) / r.width * v.w, py = v.y + (cy - r.top) / r.height * v.h, nw = Math.max(W / 60, Math.min(W * 1.3, v.w / f)), k = nw / v.w; v = {x: px - (px - v.x) * k, y: py - (py - v.y) * k, w: nw, h: v.h * k}; apply(); }
+  const cbox = k => { const o = BYK[k]; if (!o || !o.pt) return null; const q = o.pt[3] || [o.pt[0] - 4, o.pt[1] - 4, o.pt[0] + 4, o.pt[1] + 4]; return PB(q); };
+  const api = {
+    box(b, pad) { animateTo(fitBox(PB(b), pad)); }, world() { animateTo(world()); },
+    focus(k, pad = .9) { const q = cbox(k); if (!q) return; const w = Math.max(q[2] - q[0], 18), h = Math.max(q[3] - q[1], 12), cx = (q[0] + q[2]) / 2, cy = (q[1] + q[3]) / 2; animateTo(fitBox([cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2], pad)); },
+    mark(k, cls = 'me') { $$('.' + cls, svg).forEach(e => e.classList.remove(cls)); $$(`[data-k="${k}"]`, svg).forEach(e => { e.classList.add(cls); e.parentNode.appendChild(e); }); }
+  };
+  requestAnimationFrame(() => { v = world(); apply(); if (opt.focus) { api.mark(opt.focus); svg.classList.add('focus'); const q = cbox(opt.focus); if (q) { const w = Math.max(q[2] - q[0], 60), h = Math.max(q[3] - q[1], 40), cx = (q[0] + q[2]) / 2, cy = (q[1] + q[3]) / 2; v = fitBox([cx - w, cy - h, cx + w, cy + h], .1); apply(); } } });
+  new ResizeObserver(() => apply()).observe(svg);
+  if (opt.controls !== false) $('.mctl', host).onclick = e => { const b = e.target.closest('button'); if (!b) return; if (+b.dataset.z === 0) api.world(); else { const f = +b.dataset.z > 0 ? 1.7 : 1 / 1.7, nw = v.w / f, cx = v.x + v.w / 2, cy = v.y + v.h / 2; animateTo({x: cx - nw / 2, y: cy - v.h / f / 2, w: nw, h: v.h / f}); } };
+  svg.addEventListener('wheel', e => { e.preventDefault(); zoomAt(Math.exp(-e.deltaY * .0016), e.clientX, e.clientY); }, {passive: false});
+  const PT = new Map(); let moved = 0, pinch = null;
+  svg.addEventListener('pointerdown', e => { cancelAnimationFrame(anim); PT.set(e.pointerId, [e.clientX, e.clientY]); svg.setPointerCapture(e.pointerId); moved = 0; if (PT.size === 2) { const [a, b] = [...PT.values()]; pinch = Math.hypot(a[0] - b[0], a[1] - b[1]); } });
+  svg.addEventListener('pointermove', e => { if (!PT.has(e.pointerId)) return; const p = PT.get(e.pointerId); PT.set(e.pointerId, [e.clientX, e.clientY]); if (PT.size === 2) { const [a, b] = [...PT.values()], d = Math.hypot(a[0] - b[0], a[1] - b[1]); if (pinch) zoomAt(d / pinch, (a[0] + b[0]) / 2, (a[1] + b[1]) / 2); pinch = d; moved += 20; return; } const r = svg.getBoundingClientRect(); v.x -= (e.clientX - p[0]) / r.width * v.w; v.y -= (e.clientY - p[1]) / r.height * v.h; moved += Math.abs(e.clientX - p[0]) + Math.abs(e.clientY - p[1]); apply(); });
+  const up = e => { PT.delete(e.pointerId); if (PT.size < 2) pinch = null; };
+  svg.addEventListener('pointerup', e => { const was = moved; up(e); if (was < 10) { const el = document.elementFromPoint(e.clientX, e.clientY), k = el && el.dataset && el.dataset.k; if (k && opt.onTap) opt.onTap(k, el); } });
+  svg.addEventListener('pointercancel', up);
+  return api;
+}
+
+/* navegação */
+function setTab(t) { $$('nav.tabs a').forEach(a => { if (a.dataset.t === t) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); }); }
+function placeTabs() { const big = matchMedia('(min-width:900px)').matches, nav = $('nav.tabs'); if (big && nav.parentNode !== $('.tabs-slot')) $('.tabs-slot').appendChild(nav); if (!big && nav.parentNode !== document.body) document.body.insertBefore(nav, main); }
+placeTabs(); matchMedia('(min-width:900px)').addEventListener('change', placeTabs);
+
+function viewMap() {
+  setTab('mapa'); const flip = store.get('flip', false);
+  main.innerHTML = `<div class="mapview"><div class="pagehead"><div><h1>O mundo</h1><p>Toque num país para abrir o verbete. Use dois dedos, ou a roda do mouse, para aproximar.</p></div><span class="seg" role="group" aria-label="Orientação do mapa"><button data-f="0" aria-pressed="${!flip}">Norte em cima</button><button data-f="1" aria-pressed="${flip}">Sul em cima</button></span></div>
+  <div class="chips scroll" role="group" aria-label="Regiões"><button class="chip" data-c="all" aria-pressed="true">O mundo todo</button>${CTO.map(c => `<button class="chip" data-c="${c}" aria-pressed="false"><i style="background:${col(c)}"></i>${CT[c]}</button>`).join('')}</div>
+  <div class="mapbox" id="map"></div>
+  <p class="mfoot"><span>Projeção Natural Earth: mostra o tamanho dos continentes de forma mais justa que o mapa de Mercator, em que a Europa parece maior do que é.</span></p></div>`;
+  const api = makeMap($('#map'), {flip, onTap: k => { location.hash = 'p/' + k; }});
+  $$('.chips .chip', main).forEach(b => b.onclick = () => { $$('.chips .chip', main).forEach(x => x.setAttribute('aria-pressed', x === b)); if (b.dataset.c === 'all') api.world(); else api.box(contBox(b.dataset.c), .04); });
+  $$('[data-f]', main).forEach(b => b.onclick = () => { store.set('flip', b.dataset.f === '1'); viewMap(); });
+  document.title = 'Atlas do Mundo'; scrollTo(0, 0);
+}
+function viewList() {
+  setTab('paises'); const f = store.get('lf', 'all');
+  main.innerHTML = `<div class="pagehead"><div><h1>Países e territórios</h1><p>${D.C.filter(o => o.un).length} países-membros da ONU, além de territórios e outros lugares com bandeira própria.</p></div></div>
+  <div class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><label class="sr" for="q">Procurar</label><input id="q" type="search" placeholder="Procurar país, capital ou moeda…" autocomplete="off"></div>
+  <div class="chips" role="group" aria-label="Regiões">${['all', ...CTO].map(c => `<button class="chip" data-c="${c}" aria-pressed="${c === f}">${c === 'all' ? 'Todos' : `<i style="background:${col(c)}"></i>${CT[c]}`}</button>`).join('')}</div><div class="grid" id="g"></div>`;
+  const draw = () => {
+    const q = norm($('#q').value.trim()), c = store.get('lf', 'all');
+    const L = D.C.filter(o => (c === 'all' || o.ct === c) && (!q || norm(o.n).includes(q) || o.cap.some(x => norm(x).includes(q)) || (o.cur || []).some(m => norm(curName(m)).includes(q)))).sort((a, b) => a.n.localeCompare(b.n, 'pt'));
+    const card = o => `<a class="fc" href="#p/${o.k}"><img class="flag" src="${flag(o.k)}" alt="" loading="lazy"><span><b>${esc(o.n)}</b>${o.cap.length ? `<small>${esc(o.cap[0])}</small>` : ''}</span></a>`;
+    $('#g').innerHTML = (c === 'all' && !q ? CTO.map(ct => { const l = L.filter(o => o.ct === ct); return l.length ? `<h2 class="ghead"><i style="background:${col(ct)}"></i>${CT[ct]}</h2>` + l.map(card).join('') : ''; }).join('') : L.map(card).join('')) || '<p>Nenhum resultado.</p>';
+  };
+  $('#q').oninput = draw;
+  $$('.chips .chip', main).forEach(b => b.onclick = () => { store.set('lf', b.dataset.c); $$('.chips .chip', main).forEach(x => x.setAttribute('aria-pressed', x === b)); draw(); });
+  draw(); document.title = 'Países · Atlas do Mundo'; scrollTo(0, 0);
+}
+
+/* moedas e números */
+let CDN = null; try { CDN = new Intl.DisplayNames(['pt-BR'], {type: 'currency'}); } catch (e) {}
+const curName = c => { try { return CDN ? CDN.of(c) : c; } catch (e) { return c; } };
+const rate = c => D.RATES.brl[c.toLowerCase()];
+const money = (x) => x >= 100 ? nf(x, 0) : x >= 1 ? nf(x, 2) : x >= 0.01 ? nf(x, 3) : nf(x, 5);
+const IND = [
+  {k: 'pop', t: 'População', u: x => big(x) + ' de pessoas', short: x => big(x), d: 'Quantas pessoas moram no país.', src: 'ONU, World Population Prospects 2024 (estimativa para 2025)'},
+  {k: 'a', t: 'Área', u: x => nf(x) + ' km²', short: x => nf(x) + ' km²', d: 'O tamanho do território.', src: 'world-countries (dados da CIA e das Nações Unidas)'},
+  {k: 'den', t: 'Densidade', u: x => nf(x, x < 10 ? 1 : 0) + ' pessoas por km²', short: x => nf(x, x < 10 ? 1 : 0) + '/km²', d: 'Quantas pessoas há, em média, em cada quilômetro quadrado.', src: 'população ÷ área'},
+  {k: 'gdp', t: 'PIB', u: x => 'US$ ' + big(x), short: x => 'US$ ' + big(x), d: 'Produto Interno Bruto: o valor de tudo o que o país produz em um ano.', src: 'Banco Mundial, 2023'},
+  {k: 'gpc', t: 'PIB por pessoa', u: x => 'US$ ' + nf(x), short: x => 'US$ ' + nf(x), d: 'O PIB dividido pela população. É uma média: não diz quanto cada pessoa ganha, nem mostra a desigualdade dentro do país.', src: 'Banco Mundial (PIB) e ONU (população), 2023'},
+  {k: 'life', t: 'Expectativa de vida', u: x => nf(x, 1) + ' anos', short: x => nf(x, 1) + ' anos', d: 'Quantos anos as pessoas vivem, em média.', src: 'ONU, World Population Prospects 2024 (dado de 2023)'},
+  {k: 'age', t: 'Idade mediana', u: x => nf(x, 1) + ' anos', short: x => nf(x, 1) + ' anos', d: 'Metade da população é mais nova e metade é mais velha que essa idade.', src: 'ONU, World Population Prospects 2024 (dado de 2023)'},
+  {k: 'kids', t: 'Crianças (0 a 14 anos)', u: x => nf(x, 1) + '% da população', short: x => nf(x, 0) + '%', d: 'Que parte da população tem até 14 anos.', src: 'ONU, World Population Prospects 2024 (dado de 2023)'},
+  {k: 'u5', t: 'Mortalidade até 5 anos', u: x => nf(x, 1) + ' por mil nascidos', short: x => nf(x, 0) + ' ‰', d: 'De cada mil crianças que nascem, quantas morrem antes de completar 5 anos. É um dos principais indicadores do UNICEF sobre a vida das crianças.', src: 'ONU, World Population Prospects 2024 (dado de 2023)'},
+  {k: 'esc', t: 'Anos esperados de escola', u: x => nf(x, 1) + ' anos', short: x => nf(x, 1) + ' anos', d: 'Quantos anos de estudo uma criança que entra hoje na escola deve ter, se nada mudar.', src: 'PNUD, Relatório de Desenvolvimento Humano 2025 (dado de 2023)'},
+  {k: 'hdi', t: 'IDH', u: x => nf(x, 3), short: x => nf(x, 3), d: 'Índice de Desenvolvimento Humano (ONU): combina saúde, educação e renda, de 0 a 1.', src: 'PNUD, Relatório de Desenvolvimento Humano 2025 (dado de 2023)'},
+  {k: 'ren', t: 'Eletricidade renovável', u: x => nf(x, 1) + '%', short: x => nf(x, 0) + '%', d: 'Parte da eletricidade que vem de fontes renováveis: água, vento, sol, biomassa.', src: 'Our World in Data (Ember/Energy Institute)'},
+  {k: 'co2', t: 'CO₂ por pessoa', u: x => nf(x, 1) + ' t por ano', short: x => nf(x, 1) + ' t', d: 'Toneladas de gás carbônico emitidas por pessoa em um ano, a principal causa do aquecimento global.', src: 'Our World in Data (Global Carbon Project)'}
+];
+const val = (o, k) => k === 'a' ? o.a : o.s && o.s[k];
+const RK = {};
+function rankOf(o, k) { if (!RK[k]) RK[k] = D.C.filter(x => x.un && val(x, k) != null).sort((a, b) => val(b, k) - val(a, k)).map(x => x.k); const i = RK[k].indexOf(o.k); return i < 0 ? null : [i + 1, RK[k].length]; }
+
+function viewCountry(k) {
+  const o = BYK[k]; if (!o) return viewMap();
+  setTab('paises'); const F = o.f || {}, g = o.g && D.G[o.g], c = col(o.ct), s = o.s || {};
+  const items = (D.ART_BY[k] || []);
+  const sec = (t, h) => h ? `<section><h2>${t}</h2>${h}</section>` : '';
+  const lst = a => a && a.length ? `<ul class="lst">${a.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : '';
+  const curs = (o.cur || []).filter(m => rate(m));
+  const curHTML = (o.cur || []).length ? `<p>Moeda: <b>${(o.cur || []).map(m => esc(curName(m)) + ` (${m})`).join(', ')}</b>.</p>` + (curs.length && curs[0] !== 'BRL' ? (() => { const m = curs[0], r = rate(m); return `<div class="cur"><div><b>R$ 1 = ${money(r)} ${m}</b><small>um real vale isso em ${esc(curName(m))}</small></div><div><b>1 ${m} = R$ ${money(1 / r)}</b><small>quanto custa uma unidade em reais</small></div><div><b>1 ${m} = US$ ${money(D.RATES.brl.usd / r)}</b><small>em dólares</small></div><div><b>1 ${m} = € ${money(D.RATES.brl.eur / r)}</b><small>em euros</small></div></div><div class="conv"><label for="cv">Converter</label><input id="cv" type="number" inputmode="decimal" value="100" min="0"><span>${m} =</span><output id="cvo"></output></div><p class="src">Câmbio de ${new Date(D.RATES.date + 'T12:00').toLocaleDateString('pt-BR')} (fawazahmed0/currency-api). Os valores mudam todo dia.</p>`; })() : curs[0] === 'BRL' ? `<div class="cur"><div><b>R$ 1 = US$ ${money(D.RATES.brl.usd)}</b><small>em dólares</small></div><div><b>R$ 1 = € ${money(D.RATES.brl.eur)}</b><small>em euros</small></div><div><b>R$ 1 = ${money(D.RATES.brl.ars)} ARS</b><small>em pesos argentinos</small></div></div><p class="src">Câmbio de ${new Date(D.RATES.date + 'T12:00').toLocaleDateString('pt-BR')}.</p>` : '') : '';
+  const stats = IND.filter(I => !['a', 'pop', 'gdp', 'hdi'].includes(I.k) && val(o, I.k) != null).map(I => { const r = o.un ? rankOf(o, I.k) : null; return `<a class="stat" href="#numeros/${I.k}" style="--c:${c}"><span class="l">${I.t}</span><span class="v">${I.u(val(o, I.k))}</span>${r ? `<span class="rk"><b>${r[0]}º</b> de ${r[1]} países</span>` : ''}</a>`; }).join('');
+  const hinoHTML = (REC[k] || o.an) ? `<div class="hino"><button class="btn" id="anb">${ICON.play}Hino</button><div>${esc((F.hino && F.hino.n) || (o.an && o.an.t) || 'Hino nacional')}${F.hino && F.hino.m ? `<small>música de ${esc(F.hino.m)}</small>` : ''}<small>${REC[k] ? 'Gravação: ' + esc(REC[k].by) : 'Melodia tocada pelo aparelho'}</small></div></div>` : (F.hino ? `<div class="hino"><div>${esc(F.hino.n)}${F.hino.m ? `<small>${esc(F.hino.m)}</small>` : ''}${F.hino_nota ? `<small>${esc(F.hino_nota)}</small>` : ''}</div></div>` : '');
+  const KEYS = ['a', 'pop', 'gdp', 'hdi'];
+  const keyHTML = KEYS.map(kk => IND.find(I => I.k === kk)).filter(I => val(o, I.k) != null).map(I => { const r = o.un ? rankOf(o, I.k) : null; return `<a class="stat" href="#numeros/${I.k}"><span class="l">${I.t}</span><span class="v">${I.short(val(o, I.k))}</span>${r ? `<span class="rk"><b>${r[0]}º</b> de ${r[1]}</span>` : ''}</a>`; }).join('') + (o.tz ? `<div class="stat clk"><span class="l">Hora local</span><span class="v" id="clk"></span><span class="rk" id="clz"></span></div>` : '');
+  const sp = o.p && o.p.length ? D.ARTS.find(a => o.p.includes(a.p)) : null;
+  main.innerHTML = `<div class="art">
+    <header class="ahead"><div class="fl"><img class="flag" src="${flag(k)}" alt="Bandeira: ${esc(o.n)}">${hinoHTML}</div><div class="hm">
+      <div class="kick">${o.un ? 'País' : 'Território'} · <span style="color:${c}">${CT[o.ct]}</span></div>
+      <h1>${esc(o.n)}</h1>
+      <div class="sub"><button class="speak" id="sayname">${ICON.spk}Ouvir</button>${o.nn ? `<button class="speak" id="saynat">${ICON.spk}<span>Em ${esc(LANGN(o.nl))}: <b lang="${o.nv || ''}">${esc(o.nn)}</b></span></button>` : ''}</div>
+      <div class="key" style="--c:${c}">${keyHTML}</div>
+    </div></header>
+    <div class="body">
+      ${o.hm ? sec('Mapa desenhado', `<figure class="hmap"><img id="hmimg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" width="${o.hm.w}" height="${o.hm.h}" alt="Mapa desenhado de ${esc(o.n)}, com relevo, rios, lagos e paisagens naturais" loading="lazy"></figure><div class="hleg">${o.hm.eco.map(([id, pc]) => { const e = D.ECO.find(x => x[0] === id); return e ? `<span><i style="background:${e[2]}"></i>${e[1]}</span>` : ''; }).join('')}<span>★ capital</span><span>○ cidades</span><span style="color:#963c2a">▲ pico</span><span><b style="color:#467da9">~</b> rios e lagos</span></div><p class="src">As cores mostram as grandes paisagens naturais de cada zona de clima, não o uso da terra de hoje. Toque no mapa para ampliar.</p>`) : ''}
+      ${F.nome_origem ? sec('O nome', `<p>${esc(F.nome_origem)}</p>`) : ''}
+      ${sec('Território e paisagem', [F.relevo && `<p>${esc(F.relevo)}</p>`, F.clima && `<p>${esc(F.clima)}</p>`, F.ponto_mais_alto && `<h3>Ponto mais alto</h3><p>${esc(F.ponto_mais_alto)}</p>`, F.rios && F.rios.length && `<h3>Rios</h3>${lst(F.rios)}`, F.recursos && F.recursos.length && `<h3>Recursos naturais</h3>${lst(F.recursos)}`, `<h3>Mar</h3><p>${s.ll ? 'Sem saída para o mar.' : 'Tem litoral.'} Fica no hemisfério ${s.lat < 0 ? 'Sul' : 'Norte'}.</p>`].filter(Boolean).join(''))}
+      ${sec('Economia e dinheiro', [curHTML, F.exporta && F.exporta.length && `<h3>Principais exportações</h3>${plst(F.exporta)}`, F.agricultura && F.agricultura.length && `<h3>Agricultura</h3>${plst(F.agricultura)}`].filter(Boolean).join(''))}
+      ${F.pratos && F.pratos.length ? sec('Comida', `<div class="dishes" style="--c:${c}">${F.pratos.map(p => `<div class="dish"><img src="${om(p.i)}" alt="" loading="lazy"><div><b>${esc(p.nome)}</b><span>${esc(p.desc || '')}</span></div></div>`).join('')}</div>`) : ''}
+      ${g ? sec('Como se diz', `<div class="words">${[['olá', 1, 2], ['tchau', 3, 4], ['obrigado', 5, 6]].map(([pt, i, j]) => `<button class="word" data-w="${i}"><span class="pt">${ICON.spk}${pt}</span><span class="fx" lang="${o.gv || g[0]}">${esc(g[i])}</span><span class="pr">pronúncia aproximada: ${esc(g[j])}</span></button>`).join('')}</div><p class="src">Em ${esc(o.lg[0] || '')}${o.lg.length > 1 ? '. Outras línguas: ' + o.lg.slice(1, 5).map(esc).join(', ') : ''}.</p>`) : ''}
+      ${sec('Símbolos', [F.simbolos && F.simbolos.length && `<h3>Símbolos nacionais</h3>${lst(F.simbolos)}`, F.cores && F.cores.length && `<h3>Cores nacionais</h3>${lst(F.cores)}`].filter(Boolean).join(''))}
+      ${stats ? sec('Em números', `<div class="stats">${stats}</div><p class="src">Toque num número para ver a lista de todos os países.</p>`) : ''}
+      ${items.length ? sec('No atlas', `<div class="gal">${items.filter(x => x.img).map(figure).join('')}</div>${items.some(x => !x.img) ? `<div style="columns:2 280px;column-gap:24px;margin-top:16px">${items.filter(x => !x.img).map(figure).join('')}</div>` : ''}${sp ? `<p class="src">Mais em <a href="#r/${sp.p}">${esc(sp.t)}</a>.</p>` : ''}`) : sp ? sec('No atlas', `<p>Leia sobre a região: <a href="#r/${sp.p}">${esc(sp.t)}</a>.</p>`) : ''}
+      ${F.patrimonio && F.patrimonio.total ? sec('Patrimônio Mundial', `<p>${F.patrimonio.total} ${F.patrimonio.total === 1 ? 'lugar reconhecido' : 'lugares reconhecidos'} pela UNESCO${F.patrimonio.destaques && F.patrimonio.destaques.length ? ', entre eles:' : '.'}</p>${lst(F.patrimonio.destaques)}`) : ''}
+      ${o.b.length ? sec('Vizinhos', `<div class="nbs">${o.b.map(x => BYK[x]).filter(Boolean).map(x => `<a href="#p/${x.k}"><img class="flag" src="${flag(x.k)}" alt="">${esc(x.n)}</a>`).join('')}</div>`) : ''}
+    </div>
+    <aside class="box"><div class="mapbox mini" id="mini"></div><dl class="facts">
+      ${o.cap.length ? `<dt>${o.capn ? 'Capital declarada' : 'Capital'}</dt><dd>${o.cap.map(esc).join(', ')}${o.capn ? `<small style="display:block;color:var(--ink3);font-size:13px;line-height:1.35;margin-top:4px">${esc(o.capn)}</small>` : ''}</dd>` : ''}
+      ${o.lg.length ? `<dt>Línguas</dt><dd>${o.lg.slice(0, 3).map(esc).join(', ')}</dd>` : ''}
+      ${(o.cur || []).length ? `<dt>Moeda</dt><dd>${(o.cur || []).map(m => esc(curName(m))).join(', ')}</dd>` : ''}
+      ${F.independencia ? `<dt>${/territ/i.test(F.independencia) ? 'Situação' : 'Independência'}</dt><dd>${esc(F.independencia)}</dd>` : ''}
+      ${F.data_nacional ? `<dt>Data nacional</dt><dd>${esc(F.data_nacional)}</dd>` : ''}
+      <dt>Medidas</dt><dd>${esc(o.units)}</dd>
+      ${o.drive ? `<dt>Trânsito</dt><dd>mão ${o.drive === 'l' ? 'esquerda' : 'direita'}</dd>` : ''}
+      ${o.idd ? `<dt>Telefone</dt><dd>${esc(o.idd)}</dd>` : ''}
+      ${o.tld ? `<dt>Internet</dt><dd>${esc(o.tld)}</dd>` : ''}
+      ${o.tz ? `<dt>Fuso horário</dt><dd id="fz"></dd>` : ''}
+    </dl></aside>
+  </div>`;
+  $('#sayname').onclick = () => { if (!say(o.n)) toast('Este aparelho não tem voz em português.'); };
+  if ($('#saynat')) $('#saynat').onclick = () => { if (!say(o.nn, o.nv)) toast(`Este aparelho não tem voz em ${LANGN(o.nl)}.`); };
+  $$('.word', main).forEach(b => b.onclick = () => { const i = +b.dataset.w; $$('.word', main).forEach(x => x.classList.remove('on')); b.classList.add('on'); if (!say(g[i].replace(/[!¡！]/g, ''), o.gv || g[0], () => b.classList.remove('on'))) { b.classList.remove('on'); toast(`Este aparelho não tem voz em ${o.lg[0] || 'essa língua'}. Leia em voz alta: “${g[i + 1]}”.`, 4000); } });
+  if ($('#anb')) $('#anb').onclick = e => playAnthem(k, e.currentTarget);
+  if ($('#cv')) { const m = curs[0], r = rate(m); const up = () => { const x = parseFloat($('#cv').value) || 0; $('#cvo').textContent = 'R$ ' + money(x / r); }; $('#cv').oninput = up; up(); }
+  if (o.tz) startClock(o.tz);
+  if ($('#hmimg')) hmap(k).then(u => { if (u && $('#hmimg')) $('#hmimg').src = u; });
+  if ($('#hmimg')) $('#hmimg').onclick = () => openLB($('#hmimg').src, 'Mapa desenhado: ' + esc(o.n));
+  bindFigures();
+  makeMap($('#mini'), {focus: k, controls: false, noCont: true, flip: store.get('flip', false), label: 'Mapa com ' + o.n + ' em destaque', onTap: x => { if (x !== k) location.hash = 'p/' + x; }});
+  document.title = o.n + ' · Atlas do Mundo'; scrollTo(0, 0);
+}
+const tzOff = (z, d) => { const p = new Intl.DateTimeFormat('en-US', {timeZone: z, timeZoneName: 'longOffset'}).formatToParts(d).find(x => x.type === 'timeZoneName').value; const m = p.match(/([+-])(\d\d):?(\d\d)?/); return m ? (m[1] === '-' ? -1 : 1) * (+m[2] * 60 + +(m[3] || 0)) : 0; };
+const utcTxt = m => 'UTC' + (m === 0 ? '' : (m < 0 ? '−' : '+') + Math.floor(Math.abs(m) / 60) + (Math.abs(m) % 60 ? ':' + String(Math.abs(m) % 60).padStart(2, '0') : ''));
+let CLK = 0;
+function startClock([z, n]) {
+  clearInterval(CLK);
+  const tick = () => {
+    const e = $('#clk'); if (!e) return clearInterval(CLK);
+    const d = new Date(), m = tzOff(z, d), b = tzOff('America/Sao_Paulo', d), df = (m - b) / 60;
+    e.textContent = d.toLocaleTimeString('pt-BR', {timeZone: z, hour: '2-digit', minute: '2-digit'});
+    const dia = d.toLocaleDateString('pt-BR', {timeZone: z, weekday: 'short', day: 'numeric', month: 'numeric'});
+    const rel = df === 0 ? 'mesma hora de Brasília' : `${df > 0 ? '+' : '−'}${nf(Math.abs(df), Math.abs(df) % 1 ? 1 : 0)} h em relação a Brasília`;
+    $('#clz').textContent = `${dia} · ${utcTxt(m)}`;
+    const fz = $('#fz'); if (fz) fz.textContent = `${utcTxt(m)} (${rel})` + (n > 1 ? `. O país tem ${n} fusos; a hora mostrada é a da capital.` : '');
+  };
+  tick(); CLK = setInterval(tick, 15000);
+}
+const LANGN = l => (D.LN && D.LN[l]) || 'língua local';
+const OMU = {};
+const om = h => OMU[h] || (OMU[h] = D.OM && D.OM[h] ? 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(D.OM[h]) : '');
+const plst = a => a && a.length ? `<ul class="plst">${a.map(x => Array.isArray(x) ? `<li><img src="${om(x[1])}" alt="" loading="lazy">${esc(x[0])}</li>` : `<li>${esc(x)}</li>`).join('')}</ul>` : '';
+function figure(it) {
+  if (!it.img) return `<div class="note">${it.h ? `<b>${esc(it.h)}</b>` : ''}${esc(it.t)}</div>`;
+  return `<figure class="ph"><img data-img="${it.img}" src="${photo(it.img)}" width="${it.iw}" height="${it.ih}" alt="${esc(it.h || '')}" loading="lazy"><figcaption>${it.h ? `<b>${esc(it.h)}</b>` : ''}${esc(it.t || '')}${it.ed ? `<span class="edit" style="display:block">${esc(it.ed)}</span>` : ''}${it.cr ? `<span class="cr">${esc(it.cr)}</span>` : ''}</figcaption></figure>`;
+}
+function bindFigures() { $$('figure.ph img', main).forEach(im => im.onclick = () => openLB(im.src, im.closest('figure').querySelector('figcaption').innerHTML)); }
+
+/* regiões (textos próprios e fotos livres) */
+const RGROUP = [['Temas', null], ['América do Sul', 'as'], ['América Central e Caribe', 'ac'], ['América do Norte', 'an'], ['África', 'af'], ['Europa', 'eu'], ['Ásia', 'ai'], ['Oceania e polos', 'oc']];
+function viewRegions() {
+  setTab('regioes');
+  main.innerHTML = `<div class="pagehead"><div><h1>Regiões</h1><p>Textos escritos para esta edição, com fotografias de licença livre, organizados por região.</p></div></div>` +
+    RGROUP.map(([t, c]) => { const L = D.ARTS.filter(a => a.g === (c || 'tema')); return L.length ? `<h2 class="ghead" style="margin-bottom:10px">${c ? `<i style="background:${col(c)}"></i>` : ''}${t}</h2><div class="regs">${L.map(a => { const im = a.items.find(i => i.img); return `<a class="reg" href="#r/${a.p}">${im ? `<img src="${photo(im.img)}" alt="" loading="lazy">` : '<span class="ph0"></span>'}<b>${esc(a.t)}</b><small>${a.c.length ? a.c.slice(0, 6).map(x => BYK[x] ? BYK[x].n : '').filter(Boolean).join(', ') + (a.c.length > 6 ? '…' : '') : ''}</small></a>`; }).join('')}</div>` : ''; }).join('') + `<p class="src" style="margin-top:28px"><a href="#creditos">Créditos e fontes</a></p>`;
+  document.title = 'Regiões · Atlas do Mundo'; scrollTo(0, 0);
+}
+function viewRegion(p) {
+  const a = D.ARTS.find(x => x.p === p); if (!a) return viewRegions(); setTab('regioes');
+  const i = D.ARTS.indexOf(a), prev = D.ARTS[i - 1], next = D.ARTS[i + 1];
+  main.innerHTML = `<article style="max-width:1000px">
+    <div class="pagehead" style="display:block"><div class="kick">${a.g === 'tema' ? 'Tema' : esc(CT[a.g] || '')}</div><h1>${esc(a.t)}</h1></div>
+    ${a.intro ? `<p class="lede">${esc(a.intro)}</p>` : ''}${a.ed ? `<p class="edit">${esc(a.ed)}</p>` : ''}
+    ${a.c.length ? `<div class="flagrow">${a.c.filter(x => BYK[x]).map(x => `<a href="#p/${x}"><img class="flag" src="${flag(x)}" alt="">${esc(BYK[x].n)}</a>`).join('')}</div>` : ''}
+    <div class="gal">${a.items.filter(x => x.img).map(figure).join('')}</div>
+    ${a.items.some(x => !x.img) ? `<div style="columns:2 300px;column-gap:28px;margin-top:20px">${a.items.filter(x => !x.img).map(figure).join('')}</div>` : ''}
+    <p class="src" style="display:flex;justify-content:space-between;gap:10px;margin-top:26px">${prev ? `<a href="#r/${prev.p}">← ${esc(prev.t)}</a>` : '<span></span>'}${next ? `<a href="#r/${next.p}">${esc(next.t)} →</a>` : ''}</p>
+    <p class="src">Texto escrito para esta edição. Fotografias do Wikimedia Commons com licença livre; o crédito de cada uma está na legenda.</p></article>`;
+  bindFigures(); document.title = a.t + ' · Atlas do Mundo'; scrollTo(0, 0);
+}
+
+/* números */
+function viewRank(k) {
+  setTab('numeros'); const I = IND.find(x => x.k === k) || IND[0]; k = I.k;
+  const ord = store.get('rord', 'desc'), ct = store.get('rct', 'all');
+  let L = D.C.filter(o => o.un && val(o, k) != null && (ct === 'all' || o.ct === ct)).sort((a, b) => val(b, k) - val(a, k));
+  const max = val(L[0] || {}, k) || 1, sc = ['pop', 'gdp', 'a', 'den'].includes(k) ? Math.sqrt : (x => x), pos = new Map(L.map((o, i) => [o.k, i + 1]));
+  if (ord === 'asc') L = L.slice().reverse();
+  main.innerHTML = `<div class="pagehead"><div><h1>Comparar países</h1><p>${esc(I.d)}</p></div></div>
+  <div class="chips scroll" role="group" aria-label="Indicador">${IND.map(x => `<a class="chip" href="#numeros/${x.k}" aria-pressed="${x.k === k}">${x.t}</a>`).join('')}</div>
+  <div class="chips scroll" role="group" aria-label="Região e ordem"><button class="chip" id="ord">${ord === 'desc' ? 'Do maior para o menor' : 'Do menor para o maior'}</button>${['all', ...CTO.filter(c => c !== 'aq')].map(c => `<button class="chip" data-c="${c}" aria-pressed="${c === ct}">${c === 'all' ? 'Mundo' : `<i style="background:${col(c)}"></i>${CT[c]}`}</button>`).join('')}</div>
+  <div class="rank">${L.map(o => { const v = val(o, k); return `<a class="rrow${o.k === 'BR' ? ' me' : ''}" href="#p/${o.k}"><span class="n">${pos.get(o.k)}</span><img class="flag" src="${flag(o.k)}" alt=""><span><b>${esc(o.n)}</b><span class="tr"><i style="width:${Math.max(1, sc(v) / sc(max) * 100)}%;background:${col(o.ct)}"></i></span></span><span class="val">${I.short(v)}</span></a>`; }).join('')}</div>
+  <p class="src">Fonte: ${I.src}. ${L.length} países com dado disponível.</p>`;
+  $('#ord').onclick = () => { store.set('rord', ord === 'desc' ? 'asc' : 'desc'); viewRank(k); };
+  $$('[data-c]', main).forEach(b => b.onclick = () => { store.set('rct', b.dataset.c); viewRank(k); });
+  $$('.chips.scroll [aria-pressed=true]', main).forEach(b => b.parentNode.scrollLeft = b.offsetLeft - 40); document.title = I.t + ' · Atlas do Mundo'; scrollTo(0, 0);
+}
+
+/* desafios */
+const EASY = 'BR AR US CA MX FR IT ES PT DE GB JP CN IN AU RU EG ZA KE NG CL PE CO UY GR TR KR SE NO NL CH IE NZ MA SA BE DK FI PL AT VE BO PY EC CU JM GH SN IL TH VN ID PH AO MZ CV'.split(' ');
+function viewGames() {
+  setTab('jogos');
+  main.innerHTML = `<div class="pagehead"><div><h1>Desafios</h1><p>Perguntas para testar o que você sabe. Cada rodada tem 10 perguntas.</p></div><span class="seg" role="group" aria-label="Nível"><button data-l="f" aria-pressed="${store.get('lvl', 'f') === 'f'}">Iniciante</button><button data-l="d" aria-pressed="${store.get('lvl', 'f') === 'd'}">Avançado</button></span></div><div class="games">
+    <a class="gcard" href="#jogo/bandeiras"><b>Bandeiras</b><span>Veja a bandeira e diga de que país ela é.</span></a>
+    <a class="gcard" href="#jogo/onde"><b>Onde fica?</b><span>Encontre o país no mapa.</span></a>
+    <a class="gcard" href="#jogo/capitais"><b>Capitais</b><span>Qual é a capital deste país?</span></a>
+    <a class="gcard" href="#jogo/oi"><b>Que língua é essa?</b><span>Ouça um “olá” e descubra onde se fala assim.</span></a></div>`;
+  $$('[data-l]', main).forEach(b => b.onclick = () => { store.set('lvl', b.dataset.l); $$('[data-l]', main).forEach(x => x.setAttribute('aria-pressed', x === b)); });
+  document.title = 'Desafios · Atlas do Mundo'; scrollTo(0, 0);
+}
+const shuf = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+function pool(game) {
+  const lv = store.get('lvl', 'f'); let L = lv === 'f' ? EASY.map(k => BYK[k]).filter(Boolean) : D.C.filter(o => o.un);
+  if (game === 'onde') L = L.filter(o => MP.paths[o.k] && o.pt && o.pt[2] > (lv === 'f' ? 30 : 3));
+  if (game === 'capitais') L = L.filter(o => o.cap.length && !o.capn);
+  if (game === 'oi') { const seen = new Set(); L = shuf(D.C.filter(o => o.un && o.g && hasVoice(o.gv || D.G[o.g][0]))).filter(o => { if (seen.has(o.g)) return false; seen.add(o.g); return true; }); }
+  return L;
+}
+function viewGame(kind) {
+  setTab('jogos'); stopAll(); const P0 = pool(kind);
+  if (kind === 'oi' && P0.length < 3) { main.innerHTML = `<div class="qwrap"><p class="qq">Este aparelho não tem vozes em outras línguas.</p><p style="text-align:center">Em tablets e celulares costuma funcionar. <a href="#jogos">Voltar</a></p></div>`; return; }
+  const R = shuf(P0).slice(0, 10); let i = 0, ok = 0;
+  const top = () => `<div class="qtop"><a href="#jogos">${'← Desafios'}</a><span>${i + 1} de ${R.length} · ${ok} ${ok === 1 ? 'acerto' : 'acertos'}</span></div>`;
+  const lock = () => main.dataset.lock = 1, unlock = () => delete main.dataset.lock;
+  function finish() { main.innerHTML = `<div class="qwrap"><p class="qq">Você acertou ${ok} de ${R.length}.</p><p style="display:flex;gap:10px;justify-content:center"><button class="btn solid" id="again">Jogar de novo</button><a class="btn" href="#jogos">Outros desafios</a></p></div>`; $('#again').onclick = () => viewGame(kind); }
+  function next() { unlock(); if (i >= R.length) return finish(); ({bandeiras: qFlag, onde: qWhere, oi: qHello, capitais: qCap})[kind](R[i]); }
+  function mark(good) { if (good) ok++; i++; setTimeout(next, good ? 900 : 1700); }
+  function opts(t, n) { let L = P0.filter(o => o.k !== t.k); const s = L.filter(o => o.ct === t.ct); if (store.get('lvl', 'f') === 'd' && s.length >= n - 1) L = s; return shuf([t, ...shuf(L).slice(0, n - 1)]); }
+  function choose(O, t, render, label) {
+    main.innerHTML = `<div class="qwrap">${top()}${render}<div class="opts">${O.map(o => `<div class="opt" data-k="${o.k}" role="button" tabindex="0"><button class="spk" aria-label="Ouvir" data-s="${esc(label(o))}">${ICON.spk}</button><span>${esc(label(o))}</span></div>`).join('')}</div></div>`;
+    $$('.opt', main).forEach(b => { const go = e => { const sp = e.target.closest('.spk'); if (sp) { say(sp.dataset.s); return; } if (main.dataset.lock) return; lock(); const good = b.dataset.k === t.k; b.classList.add(good ? 'ok' : 'no'); if (!good) $(`.opt[data-k="${t.k}"]`, main).classList.add('ok'); mark(good); }; b.onclick = go; b.onkeydown = e => { if (e.key === 'Enter') go(e); }; });
+  }
+  function qFlag(t) { choose(opts(t, store.get('lvl', 'f') === 'f' ? 3 : 4), t, `<img class="flag qflag" src="${flag(t.k)}" alt="Uma bandeira"><p class="qq">De que país é esta bandeira?</p>`, o => o.n); }
+  function qCap(t) { choose(opts(t, 4), t, `<img class="flag" src="${flag(t.k)}" alt="" style="width:120px;margin:0 auto"><p class="qq">Qual é a capital de ${esc(t.n)}?</p>`, o => o.cap[0]); }
+  function qWhere(t) {
+    main.innerHTML = `<div class="qwrap" style="max-width:1100px">${top()}<p class="qq">Onde fica: ${esc(t.n)}? <button class="speak" id="hear">${ICON.spk}Ouvir</button></p><div class="mapbox game" id="gm"></div><p class="src">${store.get('lvl', 'f') === 'f' ? 'Dica: ' + CT[t.ct] + '.' : ''}</p></div>`;
+    let tries = 0;
+    const api = makeMap($('#gm'), {noLabels: true, noCont: true, flip: store.get('flip', false), onTap: k => { if (main.dataset.lock) return; if (k === t.k) { lock(); api.mark(k, 'hi'); toast('Certo: ' + t.n); mark(true); } else { tries++; toast(BYK[k] ? 'Esse é: ' + BYK[k].n : 'Ainda não.'); if (tries >= 2) { lock(); api.mark(t.k, 'hi'); api.focus(t.k, 1.6); mark(false); } } }});
+    if (store.get('lvl', 'f') === 'f') setTimeout(() => api.box(contBox(t.ct), .04), 300);
+    $('#hear').onclick = () => say(t.n);
+  }
+  function qHello(t) {
+    const g = D.G[t.g]; const O = opts(t, 3).filter((o, j, a) => a.findIndex(x => x.g === o.g) === j);
+    while (O.length < 3) { const x = shuf(P0).find(o => !O.some(y => y.g === o.g)); if (!x) break; O.push(x); }
+    main.innerHTML = `<div class="qwrap">${top()}<p style="text-align:center"><button class="btn solid" id="hear">${ICON.spk}Ouvir o “olá”</button></p><p class="qq">Em que país se fala assim?</p><div class="opts fl">${shuf(O).map(o => `<button class="opt" data-k="${o.k}"><img class="flag" src="${flag(o.k)}" alt=""><span style="font-size:16px;text-align:center">${esc(o.n)}</span></button>`).join('')}</div></div>`;
+    const play = () => say(g[1].replace(/[!¡！]/g, ''), t.gv || g[0]); setTimeout(play, 300); $('#hear').onclick = play;
+    $$('.opt', main).forEach(b => b.onclick = () => { if (main.dataset.lock) return; lock(); const good = BYK[b.dataset.k].g === t.g; b.classList.add(good ? 'ok' : 'no'); if (!good) $(`.opt[data-k="${t.k}"]`, main).classList.add('ok'); toast(`“${g[1]}”: ${t.lg[0]}`); mark(good); });
+  }
+  next(); scrollTo(0, 0);
+}
+function viewCredits() {
+  main.innerHTML = `<div class="credits"><div class="pagehead"><h1>Créditos e fontes</h1></div>
+  <h2>Textos das regiões</h2><p>Escritos para esta edição. Os fatos foram conferidos com fontes públicas (IBGE, ONU, UNESCO, Banco Mundial e outras); as notas da edição explicam correções importantes.</p>
+  <h2>Fotografias</h2><p>Fotos do Wikimedia Commons, todas com licença livre (domínio público, CC0, CC BY ou CC BY-SA). O autor e a licença de cada foto estão na legenda, com link para a página original.</p>
+  <h2>Mapas desenhados dos países</h2><p>Feitos para esta edição a partir de dados livres: Natural Earth (contornos, rios, lagos, geleiras, serras, desertos, cidades; domínio público), relevo sombreado Natural Earth (domínio público) e a classificação climática de Köppen-Geiger (Beck et al., 2018, CC BY 4.0, via koppen-climate-lookup), usada para colorir as grandes paisagens naturais. As cores mostram zonas aproximadas, não a vegetação de hoje, que em muitos lugares foi substituída por cidades, pastos e lavouras. Letras: Patrick Hand (SIL OFL).</p>
+  <h2>Fichas dos países</h2><p>CIA World Factbook (domínio público), via factbook.json, traduzido e resumido. Pratos típicos e algumas origens de nomes foram redigidos para esta edição e podem ser revistos.</p>
+  <h2>Números</h2><p>População (estimativa para 2025), expectativa de vida, idade mediana, crianças de 0 a 14 anos e mortalidade até 5 anos: Divisão de População das Nações Unidas, World Population Prospects 2024. IDH e anos esperados de escola: PNUD, Relatório de Desenvolvimento Humano 2025. PIB: Banco Mundial (2023, dólares correntes). CO₂ e eletricidade renovável: Our World in Data (Global Carbon Project, Ember, Energy Institute). Câmbio: fawazahmed0/currency-api, do dia indicado em cada ficha.</p>
+  <h2>Mapa</h2><p>Natural Earth (domínio público), via world-atlas, na projeção Natural Earth. A opção “Sul em cima” lembra que a orientação “norte em cima” é uma convenção, não uma verdade geográfica.</p>
+  <h2>Hinos</h2><p>Gravações do Wikimedia Commons (na maioria da Banda da Marinha dos EUA, domínio público). Melodias de caixinha de música: pacote anthem-scores, convertido de partituras livres (CC BY-SA e domínio público).</p>
+  <h2>Ilustrações de produtos e pratos</h2><p>Ícones do projeto OpenMoji (CC BY-SA 4.0), escolhidos por categoria: ilustram o tipo de produto ou prato, não são fotografias do prato daquele país.</p>
+  <h2>Bandeiras e vozes</h2><p>Bandeiras: flag-icons (MIT). As palavras são ditas pelas vozes do próprio aparelho.</p>
+  <h2>Letras</h2><p>Literata, Figtree e Patrick Hand (SIL Open Font License).</p>
+  <h2>Créditos das fotografias</h2><p>Lista completa: título do arquivo, autor, licença e endereço da página original no Wikimedia Commons (o endereço aparece como texto, sem link, para que o app não leve as crianças para fora dele).</p>
+  <ol class="photocr">${D.ARTS.flatMap(a => a.items.filter(i => i.img && i.cr).map(i => `<li>${esc(i.h || '')} — ${esc(i.cr.replace(/^Foto: /, ''))}${i.src ? `<br><span>${esc((u => { try { return decodeURI(u); } catch (e) { return u; } })(i.src))}</span>` : ''}</li>`)).join('')}</ol>
+  <h2>Licenças</h2><p>Textos, fichas, mapas desenhados, desafios e programação: obra original desta edição. Componentes de terceiros, todos com licença que permite uso comercial com atribuição:</p>
+  <ul class="lst" style="display:block;columns:2 320px">
+  <li>Fotografias: Wikimedia Commons; domínio público, CC0, CC BY, CC BY-SA e Licença Arte Livre. A licença e o autor de cada foto estão na legenda e na lista acima.</li>
+  <li>Contornos, rios, lagos, relevo e cidades: Natural Earth (domínio público).</li>
+  <li>Zonas climáticas: Beck et al. (2018), Köppen-Geiger, CC BY 4.0.</li>
+  <li>População, expectativa de vida, idades e mortalidade infantil: ONU, World Population Prospects 2024 (CC BY 3.0 IGO).</li>
+  <li>IDH e escolaridade: PNUD, Relatório de Desenvolvimento Humano 2025 (CC BY 3.0 IGO).</li>
+  <li>PIB: Banco Mundial (CC BY 4.0). CO₂ e energia: Our World in Data (CC BY 4.0).</li>
+  <li>Fichas dos países, base: CIA World Factbook (domínio público), reescrito e checado.</li>
+  <li>Dados de países (nomes, fronteiras, moedas, códigos): world-countries, de Mohammed Le Doze (ODbL 1.0).</li>
+  <li>Bandeiras: flag-icons (MIT). Ícones de produtos e pratos: OpenMoji (CC BY-SA 4.0).</li>
+  <li>Hinos: gravações da Banda da Marinha dos EUA (domínio público); melodias do pacote anthem-scores (CC BY-SA).</li>
+  <li>Câmbio: fawazahmed0/currency-api (CC0).</li></ul></div>`;
+  document.title = 'Créditos · Atlas do Mundo'; scrollTo(0, 0);
+}
+
+/* imagem ampliada */
+const lb = $('#lb'), lbi = $('img', lb), stage = $('.stage', lb); let L = {s: 1, x: 0, y: 0};
+const lbA = () => lbi.style.transform = `translate(${L.x}px,${L.y}px) scale(${L.s})`;
+function lbFit() { const W = innerWidth, H = innerHeight - 120, w = lbi.naturalWidth, h = lbi.naturalHeight; L.s = Math.min(W / w, H / h, 2.5) * .95; L.x = (W - w * L.s) / 2; L.y = (H - h * L.s) / 2 + 10; lbA(); }
+function lbZ(f, cx, cy) { const ns = Math.max(.1, Math.min(6, L.s * f)); f = ns / L.s; L.x = cx - (cx - L.x) * f; L.y = cy - (cy - L.y) * f; L.s = ns; lbA(); }
+function openLB(src, cap) { lbi.onload = lbFit; lbi.src = src; $('.cap', lb).innerHTML = cap || ''; lb.classList.add('on'); document.body.style.overflow = 'hidden'; history.pushState({lb: 1}, ''); }
+function closeLB(fromPop) { if (!lb.classList.contains('on')) return; lb.classList.remove('on'); document.body.style.overflow = ''; if (!fromPop && history.state && history.state.lb) history.back(); }
+addEventListener('popstate', () => closeLB(true));
+$('.x', lb).onclick = () => closeLB();
+stage.addEventListener('wheel', e => { e.preventDefault(); lbZ(Math.exp(-e.deltaY * .0018), e.clientX, e.clientY); }, {passive: false});
+const LP = new Map(); let lpin = null, lmv = 0;
+stage.addEventListener('pointerdown', e => { LP.set(e.pointerId, [e.clientX, e.clientY]); stage.setPointerCapture(e.pointerId); lmv = 0; if (LP.size === 2) { const [a, b] = [...LP.values()]; lpin = Math.hypot(a[0] - b[0], a[1] - b[1]); } });
+stage.addEventListener('pointermove', e => { if (!LP.has(e.pointerId)) return; const p = LP.get(e.pointerId); LP.set(e.pointerId, [e.clientX, e.clientY]); if (LP.size === 2) { const [a, b] = [...LP.values()], d = Math.hypot(a[0] - b[0], a[1] - b[1]); if (lpin) lbZ(d / lpin, (a[0] + b[0]) / 2, (a[1] + b[1]) / 2); lpin = d; lmv += 20; return; } L.x += e.clientX - p[0]; L.y += e.clientY - p[1]; lmv += Math.abs(e.clientX - p[0]) + Math.abs(e.clientY - p[1]); lbA(); });
+stage.addEventListener('pointerup', e => { LP.delete(e.pointerId); if (LP.size < 2) lpin = null; if (lmv < 6 && e.target === stage) closeLB(); });
+document.addEventListener('keydown', e => { if (lb.classList.contains('on') && e.key === 'Escape') closeLB(); });
+addEventListener('resize', () => { if (lb.classList.contains('on')) lbFit(); });
+
+function route() {
+  stopAll(); const h = decodeURIComponent(location.hash.slice(1));
+  if (h.startsWith('p/')) return viewCountry(h.slice(2));
+  if (h.startsWith('r/')) return viewRegion(h.slice(2));
+  if (h.startsWith('jogo/')) return viewGame(h.slice(5));
+  if (h === 'paises') return viewList();
+  if (h === 'regioes') return viewRegions();
+  if (h === 'jogos') return viewGames();
+  if (h.startsWith('numeros')) return viewRank(h.split('/')[1]);
+  if (h === 'creditos') return viewCredits();
+  viewMap();
+}
+(async () => {
+  [D, FL, MP] = await Promise.all([chunk('d'), chunk('f'), chunk('m')]);
+  D.C.forEach(o => BYK[o.k] = o); REC = D.REC || {};
+  D.ART_BY = {}; D.ARTS.forEach(a => a.items.forEach(it => (it.c || []).forEach(k => (D.ART_BY[k] = D.ART_BY[k] || []).push(it))));
+  addEventListener('hashchange', () => { if (!lb.classList.contains('on')) route(); });
+  route();
+})();
+}
+
+if ('serviceWorker' in navigator && !window.Capacitor && (location.protocol === 'https:' || location.hostname === 'localhost')) { try { navigator.serviceWorker.register('sw.js').catch(() => {}); } catch (e) {} }
+</script>
+</body>
+</html>

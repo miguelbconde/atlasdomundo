@@ -1,0 +1,8 @@
+{
+  "appId": "br.com.miguelbconde.atlasdomundo",
+  "appName": "Atlas do Mundo",
+  "webDir": "web",
+  "backgroundColor": "#f4ecd8",
+  "android": { "allowMixedContent": false },
+  "ios": { "contentInset": "never", "limitsNavigationsToAppBoundDomains": true }
+}

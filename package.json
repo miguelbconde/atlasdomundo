@@ -1,0 +1,19 @@
+{
+  "name": "atlas-do-mundo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Atlas do Mundo — enciclopédia ilustrada dos países, para crianças e famílias, vista a partir do Sul.",
+  "scripts": {
+    "sync": "cap sync",
+    "assets": "capacitor-assets generate --iconBackgroundColor '#f4ecd8' --splashBackgroundColor '#f4ecd8'"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.6.3",
+    "@capacitor/cli": "^8.6.3",
+    "@capacitor/core": "^8.6.3",
+    "@capacitor/ios": "^8.6.3"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^4.0.0"
+  }
+}
