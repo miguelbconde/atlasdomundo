@@ -3,6 +3,7 @@ K=json.load(open('kids.json'))
 C={c['cca2']:c for c in json.load(open('/tmp/npmt/node_modules/world-countries/countries.json'))}
 ST=json.load(open('stats/stats.json'))
 OFF=json.load(open('stats/official.json'))['v']
+OIL=json.load(open('stats/oil.json'))['v']
 FBM=json.load(open('fb/map.json'))
 FB={}
 for f in sorted(glob.glob('fb/out/*.json')): FB.update(json.load(open(f)))
@@ -20,6 +21,7 @@ for o in K['C']:
     _of=OFF.get(o['k'],{})
     o['s']={kk:v for kk,v in o['s'].items() if kk not in ('pop','popY','gdp','gdpY','gpc','life','age','hdi')}
     o['s'].update(_of)
+    o['s'].update(OIL.get(o['k'],{}))
     if o['s'].get('pop') and o.get('a'): o['s']['den']=round(o['s']['pop']/o['a'],1)
     f=FB.get(o['k'])
     if f: o['f']={k:v for k,v in f.items() if v not in (None,[],'',{})}
