@@ -207,9 +207,34 @@ for a in ARTS:
     if a.get('ed') and re.search(r'\blivro\b|texto original|original', a['ed'], re.I): a['ed']=None
 for o in K['C']:
     if o.get('p'): o['p']=[SL.get(x,x) for x in o['p']]
+# Em foco (versão 2: itens próprios por país)
+F2={}
+for f in sorted(glob.glob('foco2/out/b*.json')):
+    c=f.replace('/out/','/chk/')
+    F2.update(json.load(open(c if os.path.exists(c) else f)))
+_PM=json.load(open('photos2/meta.json')) if os.path.exists('photos2/meta.json') else {}
+for _f in glob.glob('photos2/meta_foco_*.json'): _PM.update(json.load(open(_f)))
+_PM={kk:vv for kk,vv in _PM.items() if isinstance(vv,dict)}
+_AP={a['p']:a for a in ARTS}
+def _credit(m):
+    lic=m['lic']; lic={'Public domain':'domínio público','No restrictions':'sem restrições'}.get(lic,lic)
+    return f"Foto: {m['user'] or 'autor desconhecido'} · {lic} · Wikimedia Commons"
 for o in K['C']:
-    ids=[x for x in FOCO_PEND.get(o['k'],[]) if any(a['p']==x.split(':')[0] and int(x.split(':')[1])<len(a['items']) for a in ARTS)]
-    if ids: o['foco']=ids[:5]
+    L=[]
+    for n,it in enumerate(F2.get(o['k'],[])):
+        if it.get('usar'):
+            p,i=it['usar'].split(':'); a=_AP.get(p)
+            if not a or int(i)>=len(a['items']): continue
+            base=dict(a['items'][int(i)]); base.pop('c',None)
+            if it.get('h'): base['h']=it['h']
+            if it.get('t'): base['t']=it['t']
+            L.append(base)
+        else:
+            x={'h':it.get('h'),'t':it.get('t')}
+            m=_PM.get(f"foco_{o['k']}_{n}")
+            if m and m.get('lic')!='GFDL': x.update(img=m['img'],iw=m['iw'],ih=m['ih'],cr=_credit(m),src=m.get('page'))
+            L.append(x)
+    if L: o['foco']=L[:5]
     else: o.pop('foco',None)
 K['ARTS']=ARTS; K['RATES']={'date':R['date'],'brl':R['brl']}
 REC=json.load(open('anth/rec.json')) if os.path.exists('anth/rec.json') else {}

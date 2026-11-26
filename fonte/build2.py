@@ -10,7 +10,7 @@ fonts+=''.join(ff('Figtree',f'figtree/files/figtree-{s}-{w}-normal.woff2',w) for
 D=json.load(open('kids2.json')); FL=json.load(open('flags.json')); MP=json.load(open('kidmap.json'))
 data=ch('d',D)+ch('f',FL)+ch('m',MP)
 t=open('template2.html',encoding='utf-8').read().replace('/*__FONTS__*/',fonts)
-used=sorted({i['img'] for a in D['ARTS'] for i in a['items'] if i.get('img')})
+used=sorted({i['img'] for a in D['ARTS'] for i in a['items'] if i.get('img')} | {i['img'] for o in D['C'] for i in (o.get('foco') or []) if isinstance(i, dict) and i.get('img')})
 recs=sorted(D['REC'])
 b64=lambda kid,p: f'<script type="application/octet-stream" id="{kid}">'+base64.b64encode(open(p,'rb').read()).decode()+'</script>\n'
 HM=sorted(o['k'] for o in D['C'] if o.get('hm'))
@@ -36,14 +36,23 @@ for n in ('icon-192.png','icon-512.png','maskable-192.png','maskable-512.png','a
 json.dump({'name':'Atlas do Mundo','short_name':'Atlas do Mundo','description':'Enciclopédia ilustrada dos países do mundo, para crianças e famílias, vista a partir do Sul.','lang':'pt-BR','start_url':'./','scope':'./','display':'standalone','orientation':'any','background_color':'#f4ecd8','theme_color':'#fbfaf6','categories':['education','books','kids'],
  'icons':[{'src':'icon-192.png','sizes':'192x192','type':'image/png','purpose':'any'},{'src':'icon-512.png','sizes':'512x512','type':'image/png','purpose':'any'},{'src':'maskable-192.png','sizes':'192x192','type':'image/png','purpose':'maskable'},{'src':'maskable-512.png','sizes':'512x512','type':'image/png','purpose':'maskable'}]},open('art2/manifest.webmanifest','w'),ensure_ascii=False,indent=1)
 
-for n in used: shutil.copy(f'photos2/img/{n}.webp',f'art2/f/{n}.webp')
+import re as _re, io as _io
+FBK={}
+for n in used: FBK.setdefault(_re.sub(r'_[^_]*$','',n),{})[n]=base64.b64encode(open(f'photos2/img/{n}.webp','rb').read()).decode()
+for bk,v in FBK.items(): json.dump(v,open(f'art2/f/{bk}.json','w'))
+TL={}
+for a in D['ARTS']:
+    im=next((i for i in a['items'] if i.get('img')),None)
+    if im:
+        x=Image.open(f"photos2/img/{im['img']}.webp"); x.thumbnail((420,420)); bf=_io.BytesIO(); x.save(bf,'WEBP',quality=62); TL[im['img']]=base64.b64encode(bf.getvalue()).decode()
+json.dump(TL,open('art2/f/_tiles.json','w'))
 HB={}
 for k in HM: HB.setdefault(k[0],{})[k]=base64.b64encode(open(f'hand/{k}.webp','rb').read()).decode()
 for L,v in HB.items(): json.dump(v,open(f'art2/h/{L}.json','w'))
 for k in recs: shutil.copy(f'anth/mp3/{k}.mp3',f'art2/a/{k}.mp3')
 import hashlib
 ver=hashlib.md5(open('art2/index.html','rb').read()).hexdigest()[:10]
-core=['./','index.html','manifest.webmanifest','icon-192.png','icon-512.png']+['h/'+x for x in sorted(os.listdir('art2/h'))]+['a/'+x for x in sorted(os.listdir('art2/a'))]
+core=['./','index.html','manifest.webmanifest','icon-192.png','icon-512.png']+['f/_tiles.json']+['h/'+x for x in sorted(os.listdir('art2/h'))]+['a/'+x for x in sorted(os.listdir('art2/a'))]
 open('art2/sw.js','w').write(f'''const V='atlas-{ver}', CORE={json.dumps(core)};
 self.addEventListener('install',e=>{{e.waitUntil(caches.open(V).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()))}});
 self.addEventListener('activate',e=>{{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==V).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))}});

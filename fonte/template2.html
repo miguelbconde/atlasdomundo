@@ -316,7 +316,13 @@ const IU = {};
 function blob(id, type) { if (IU[id]) return IU[id]; const el = document.getElementById(id); if (!el) return ''; const bin = Uint8Array.from(atob(el.textContent.trim()), c => c.charCodeAt(0)); return (IU[id] = URL.createObjectURL(new Blob([bin], {type}))); }
 const HMB = {};
 const hmap = k => EMBED ? Promise.resolve(blob('h-' + k, 'image/webp')) : (HMB[k[0]] = HMB[k[0]] || fetch('h/' + k[0] + '.json').then(r => r.json())).then(j => j[k] ? URL.createObjectURL(new Blob([Uint8Array.from(atob(j[k]), c => c.charCodeAt(0))], {type: 'image/webp'})) : '');
-const photo = n => EMBED ? blob('i-' + n, 'image/webp') : 'f/' + n + '.webp';
+const GIF0 = 'data:image/gif;base64,R0lGODlhAQABAAAAACw=';
+const photo = n => EMBED ? blob('i-' + n, 'image/webp') : GIF0;
+const FB = {}, FBU = {};
+const fbk = n => n.startsWith('foco_') ? n.replace(/_[^_]*$/, '') : n.replace(/_[^_]*$/, '');
+function fimg(n, bk) { const key = bk + '|' + n; if (FBU[key]) return Promise.resolve(FBU[key]); return (FB[bk] = FB[bk] || fetch('f/' + bk + '.json').then(r => r.json())).then(j => j[n] ? (FBU[key] = URL.createObjectURL(new Blob([Uint8Array.from(atob(j[n]), c => c.charCodeAt(0))], {type: 'image/webp'}))) : ''); }
+function hydrate(root) { if (EMBED) return; (root || document).querySelectorAll('img[data-img]:not([data-ok]),img[data-tile]:not([data-ok])').forEach(im => { im.dataset.ok = 1; const t = im.dataset.tile, n = t || im.dataset.img; fimg(n, t ? '_tiles' : fbk(n)).then(u => { if (u) im.src = u; }); }); }
+if (!EMBED) new MutationObserver(() => hydrate()).observe(document.documentElement, {childList: true, subtree: true});
 const recURL = k => EMBED ? blob('a-' + k, 'audio/mpeg') : 'a/' + k + '.mp3';
 let D, FL, MP, BYK = {}, REC = {};
 const main = $('#main');
@@ -487,7 +493,7 @@ function rankOf(o, k) { if (!RK[k]) RK[k] = D.C.filter(x => x.un && val(x, k) !=
 function viewCountry(k) {
   const o = BYK[k]; if (!o) return viewMap();
   setTab('paises'); const F = o.f || {}, g = o.g && D.G[o.g], c = col(o.ct), s = o.s || {};
-  const items = (o.foco || []).map(id => { const [p, i] = id.split(':'); const a = D.ARTS.find(x => x.p === p); return a && a.items[+i]; }).filter(Boolean);
+  const items = o.foco || [];
   const sec = (t, h) => h ? `<section><h2>${t}</h2>${h}</section>` : '';
   const lst = a => a && a.length ? `<ul class="lst">${a.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : '';
   const curs = (o.cur || []).filter(m => rate(m));
@@ -573,7 +579,7 @@ const RGROUP = [['Temas', null], ['América do Sul', 'as'], ['América Central e
 function viewRegions() {
   setTab('regioes');
   main.innerHTML = `<div class="pagehead"><div><h1>Regiões</h1><p>Textos escritos para esta edição, com fotografias de licença livre, organizados por região.</p></div></div>` +
-    RGROUP.map(([t, c]) => { const L = D.ARTS.filter(a => a.g === (c || 'tema')); return L.length ? `<h2 class="ghead" style="margin-bottom:10px">${c ? `<i style="background:${col(c)}"></i>` : ''}${t}</h2><div class="regs">${L.map(a => { const im = a.items.find(i => i.img); return `<a class="reg" href="#r/${a.p}">${im ? `<img src="${photo(im.img)}" alt="" loading="lazy">` : '<span class="ph0"></span>'}<b>${esc(a.t)}</b><small>${a.c.length ? a.c.slice(0, 6).map(x => BYK[x] ? BYK[x].n : '').filter(Boolean).join(', ') + (a.c.length > 6 ? '…' : '') : ''}</small></a>`; }).join('')}</div>` : ''; }).join('') + `<p class="src" style="margin-top:28px"><a href="#creditos">Créditos e fontes</a></p>`;
+    RGROUP.map(([t, c]) => { const L = D.ARTS.filter(a => a.g === (c || 'tema')); return L.length ? `<h2 class="ghead" style="margin-bottom:10px">${c ? `<i style="background:${col(c)}"></i>` : ''}${t}</h2><div class="regs">${L.map(a => { const im = a.items.find(i => i.img); return `<a class="reg" href="#r/${a.p}">${im ? `<img data-tile="${im.img}" src="${photo(im.img)}" alt="" loading="lazy">` : '<span class="ph0"></span>'}<b>${esc(a.t)}</b><small>${a.c.length ? a.c.slice(0, 6).map(x => BYK[x] ? BYK[x].n : '').filter(Boolean).join(', ') + (a.c.length > 6 ? '…' : '') : ''}</small></a>`; }).join('')}</div>` : ''; }).join('') + `<p class="src" style="margin-top:28px"><a href="#creditos">Créditos e fontes</a></p>`;
   document.title = 'Regiões · Atlas do Mundo'; scrollTo(0, 0);
 }
 function viewRegion(p) {
@@ -672,7 +678,7 @@ function viewCredits() {
   <h2>Bandeiras e vozes</h2><p>Bandeiras: flag-icons (MIT). As palavras são ditas pelas vozes do próprio aparelho.</p>
   <h2>Letras</h2><p>Literata e Figtree (SIL Open Font License).</p>
   <h2>Créditos das fotografias</h2><p>Lista completa: título do arquivo, autor, licença e endereço da página original no Wikimedia Commons (o endereço aparece como texto, sem link, para que o app não leve as crianças para fora dele).</p>
-  <ol class="photocr">${D.ARTS.flatMap(a => a.items.filter(i => i.img && i.cr).map(i => `<li>${esc(i.h || '')} — ${esc(i.cr.replace(/^Foto: /, ''))}${i.src ? `<br><span>${esc((u => { try { return decodeURI(u); } catch (e) { return u; } })(i.src))}</span>` : ''}</li>`)).join('')}</ol>
+  <ol class="photocr">${(() => { const seen = new Set(); return [...D.ARTS.flatMap(a => a.items), ...D.C.flatMap(o => o.foco || [])].filter(i => i.img && i.cr && !seen.has(i.img) && seen.add(i.img)); })().map(i => `<li>${esc(i.h || '')} — ${esc(i.cr.replace(/^Foto: /, ''))}${i.src ? `<br><span>${esc((u => { try { return decodeURI(u); } catch (e) { return u; } })(i.src))}</span>` : ''}</li>`).join('')}</ol>
   <h2>Licenças</h2><p>Textos, fichas, mapas físicos, desafios e programação: obra original desta edição. Componentes de terceiros, todos com licença que permite uso comercial com atribuição:</p>
   <ul class="lst" style="display:block;columns:2 320px">
   <li>Fotografias: Wikimedia Commons; domínio público, CC0, CC BY, CC BY-SA e Licença Arte Livre. A licença e o autor de cada foto estão na legenda e na lista acima.</li>
