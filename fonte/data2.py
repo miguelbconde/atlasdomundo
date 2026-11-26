@@ -236,6 +236,19 @@ for o in K['C']:
             L.append(x)
     if L: o['foco']=L[:5]
     else: o.pop('foco',None)
+_FX=json.load(open('foco_fix.json'))
+for o in K['C']:
+    if not o.get('foco'): continue
+    nl=[]
+    for it in o['foco']:
+        key=o['k']+'|'+it.get('h','')
+        if key in _FX:
+            v=_FX.pop(key)
+            if v is None: continue
+            it=dict(it); it.update(v)
+        nl.append(it)
+    o['foco']=nl
+if _FX: print('FIX NAO APLICADOS:',list(_FX))
 K['ARTS']=ARTS; K['RATES']={'date':R['date'],'brl':R['brl']}
 REC=json.load(open('anth/rec.json')) if os.path.exists('anth/rec.json') else {}
 REC.pop('NG',None)  # gravação é do hino antigo (1978–2024)
