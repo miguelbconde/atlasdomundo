@@ -54,7 +54,7 @@ As duas lojas pedem um endereço público para `web/privacidade.html`. O jeito m
 5. Escolher o build enviado pelo TestFlight e enviar para revisão.
 
 ## Atualizar o conteúdo
-Os dados e o texto são gerados por `fonte/data2.py` e `fonte/build2.py` (precisam dos dados de origem, não incluídos). Depois de gerar, copiar o resultado para `web/`, subir a versão em `package.json` e rodar os workflows.
+Tudo o que é preciso para gerar o app está em `fonte/`: a base de dados (`fonte/base/kids2.json`), o modelo da interface (`fonte/base/template.html`), as fotos, os mapas e os hinos (`fonte/midia/`). Para regenerar `web/`, basta rodar `python3 fonte/build.py`. Depois, suba a versão em `package.json` e rode os workflows. O passo a passo detalhado e as regras editoriais estão em `CLAUDE.md`.
 
 ## Licenças
 Textos, fichas, mapas desenhados e programação: © Miguel Conde, todos os direitos reservados.
