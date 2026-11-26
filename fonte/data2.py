@@ -263,7 +263,7 @@ for o in K['C']:
     g=_tzg(o['k'], (o.get('tz') or [None])[0])
     if g: o['tzs']=g
 for _a in K['ARTS']:
-    if _a.get('intro'): _a['intro']=_a['intro'].replace('A maior parte desse aumento aconteceu no Sul Global, onde vivem atualmente mais de 83% das pessoas.','A maior parte desse aumento aconteceu na Ásia, na África e na América Latina, onde vivem hoje mais de 80% das pessoas.')
+    if _a.get('p')=='gente-do-planeta': _a['intro']='Há pouco mais de um século, a humanidade era quatro vezes menor do que hoje. Esse crescimento não foi igual em toda parte. Na Europa, no Japão e, mais recentemente, na China, nascem poucas crianças e a população envelhece; em boa parte da África, as famílias são maiores e a maioria das pessoas é jovem: a idade mediana fica perto de 20 anos, contra mais de 40 na Europa. A riqueza também se distribui de modo desigual, e quem vive num país rico usa, em média, muito mais energia e recursos do que quem vive num país pobre. As razões são muitas, da geografia e do clima à história e às escolhas de cada governo, e o quadro muda: em poucas décadas, a China tirou centenas de milhões de pessoas da pobreza extrema.'
 K['REC']=REC
 K.pop('SP',None)
 json.dump(K,open('kids2.json','w'),ensure_ascii=False)
