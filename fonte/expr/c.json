@@ -1,0 +1,620 @@
+{
+"RE": [
+{
+"t": "palavra",
+"o": "marmay",
+"s": "Criança, molecada, no crioulo da Reunião.",
+"lg": "crioulo reunionês"
+}
+],
+"RO": [
+{
+"t": "expressão",
+"o": "a se uita ca mâța-n calendar",
+"v": "ro-RO",
+"l": "olhar como o gato para o calendário",
+"s": "Olhar para algo sem entender nada."
+}
+],
+"RS": [
+{
+"t": "palavra",
+"o": "инат",
+"r": "inat",
+"v": "sr-RS",
+"s": "Teimosia orgulhosa: fazer algo só para não dar o braço a torcer."
+}
+],
+"RU": [
+{
+"t": "expressão",
+"o": "вешать лапшу на уши",
+"r": "veshát lapshú na úshi",
+"v": "ru-RU",
+"l": "pendurar macarrão nas orelhas",
+"s": "Contar lorota, enganar."
+},
+{
+"t": "palavra",
+"o": "дача",
+"r": "dátcha",
+"v": "ru-RU",
+"s": "Casinha de campo com horta, onde muitas famílias passam o verão."
+}
+],
+"RW": [
+{
+"t": "palavra",
+"o": "umuganda",
+"v": "rw-RW",
+"s": "O mutirão do último sábado do mês, quando todos limpam ruas e ajudam a comunidade."
+}
+],
+"SA": [
+{
+"t": "palavra",
+"o": "أبشر",
+"r": "abshir",
+"v": "ar-SA",
+"s": "“Pode deixar, considere feito!”, resposta a um pedido."
+}
+],
+"SB": [
+{
+"t": "palavra",
+"o": "wantok",
+"l": "uma língua",
+"s": "Quem fala a mesma língua que você: parente, conterrâneo, alguém com quem se pode contar.",
+"lg": "pijin"
+}
+],
+"SC": [
+{
+"t": "saudação",
+"o": "Ki manyer?",
+"s": "Como vai? Em crioulo seichelense.",
+"lg": "crioulo seichelense"
+}
+],
+"SD": [
+{
+"t": "palavra",
+"o": "جبنة",
+"r": "jabana",
+"v": "ar-SA",
+"s": "O café sudanês, fervido com gengibre num bule de barro de bico fino."
+}
+],
+"SE": [
+{
+"t": "palavra",
+"o": "lagom",
+"v": "sv-SE",
+"s": "Nem muito, nem pouco: a medida certa."
+},
+{
+"t": "expressão",
+"o": "ingen ko på isen",
+"v": "sv-SE",
+"l": "nenhuma vaca no gelo",
+"s": "Sem problema, não há perigo."
+}
+],
+"SG": [
+{
+"t": "gíria",
+"o": "shiok",
+"s": "Delicioso, maravilhoso, no singlish, o inglês misturado de Singapura."
+},
+{
+"t": "palavra",
+"o": "lah",
+"s": "Palavrinha no fim da frase para dar ênfase: “ok lah!”."
+}
+],
+"SH": [
+{
+"t": "apelido",
+"o": "Saints",
+"l": "santos",
+"s": "Apelido dos moradores de Santa Helena."
+}
+],
+"SI": [
+{
+"t": "palavra",
+"o": "midva",
+"v": "sl-SI",
+"s": "“Nós dois”. O esloveno tem formas só para pares, além de singular e plural."
+}
+],
+"SJ": [
+{
+"t": "palavra",
+"o": "isbjørn",
+"v": "nb-NO",
+"l": "urso de gelo",
+"s": "Urso-polar. Em Svalbard há mais ursos-polares que gente.",
+"lg": "norueguês"
+}
+],
+"SK": [
+{
+"t": "palavra",
+"o": "halušky",
+"v": "sk-SK",
+"s": "Bolinhas de massa de batata com queijo de ovelha, prato nacional."
+}
+],
+"SL": [
+{
+"t": "saudação",
+"o": "Kushe",
+"s": "Olá, em krio.",
+"lg": "krio"
+}
+],
+"SM": [
+{
+"t": "lema",
+"o": "Libertas",
+"s": "Liberdade, em latim: a palavra que está no brasão de San Marino."
+}
+],
+"SN": [
+{
+"t": "palavra",
+"o": "teranga",
+"s": "Hospitalidade, a arte de receber bem. É o orgulho nacional.",
+"lg": "uolofe"
+}
+],
+"SO": [
+{
+"t": "saudação",
+"o": "Nabad gelyo",
+"v": "so-SO",
+"l": "entre em paz",
+"s": "Tchau, vá em paz."
+}
+],
+"SR": [
+{
+"t": "saudação",
+"o": "Fa waka?",
+"l": "como anda?",
+"s": "Como vai? Em sranan tongo, a língua comum do Suriname.",
+"lg": "sranan tongo"
+}
+],
+"SS": [
+{
+"t": "expressão",
+"o": "mafi mushkila",
+"s": "Sem problema, no árabe de Juba.",
+"lg": "árabe de Juba"
+}
+],
+"ST": [
+{
+"t": "expressão",
+"o": "leve-leve",
+"v": "pt-PT",
+"s": "Devagar, sem pressa: o lema do dia a dia em São Tomé."
+}
+],
+"SV": [
+{
+"t": "gíria",
+"o": "¡Qué chivo!",
+"v": "es-MX",
+"s": "Que legal!"
+},
+{
+"t": "palavra",
+"o": "bicho, bicha",
+"v": "es-MX",
+"s": "Criança, menino, menina."
+}
+],
+"SX": [
+{
+"t": "palavra",
+"o": "johnny cake",
+"s": "Bolinho de massa frito, comido no café da manhã."
+}
+],
+"SY": [
+{
+"t": "palavra",
+"o": "تكرم",
+"r": "tikram",
+"v": "ar-SA",
+"s": "“Com todo prazer, é pra já!”, resposta generosa a um pedido."
+}
+],
+"SZ": [
+{
+"t": "palavra",
+"o": "Incwala",
+"v": "ss-SZ",
+"s": "A cerimônia dos primeiros frutos, a festa mais sagrada do reino."
+}
+],
+"TC": [
+{
+"t": "palavra",
+"o": "Belonger",
+"l": "quem pertence",
+"s": "Pessoa que é das ilhas, com direitos de nativo."
+}
+],
+"TD": [
+{
+"t": "palavra",
+"o": "lafiya",
+"s": "Saúde, paz. Resposta comum quando perguntam se está tudo bem.",
+"lg": "árabe do Chade"
+}
+],
+"TF": [
+{
+"t": "palavra",
+"o": "manchot",
+"v": "fr-FR",
+"l": "sem mão",
+"s": "Pinguim, em francês. Nessas ilhas vivem milhões deles."
+}
+],
+"TG": [
+{
+"t": "saudação",
+"o": "Woezɔ",
+"s": "Bem-vindo, em ewe.",
+"lg": "ewe"
+}
+],
+"TH": [
+{
+"t": "expressão",
+"o": "ไม่เป็นไร",
+"r": "mai pen rai",
+"v": "th-TH",
+"s": "Não tem problema, deixa pra lá."
+},
+{
+"t": "palavra",
+"o": "สนุก",
+"r": "sanuk",
+"v": "th-TH",
+"s": "Diversão. Para os tailandeses, até o trabalho deve ter um pouco de sanuk."
+}
+],
+"TJ": [
+{
+"t": "palavra",
+"o": "чойхона",
+"r": "choykhona",
+"v": "tg-TJ",
+"s": "Casa de chá, onde se senta em tablados com almofadas para comer e conversar."
+}
+],
+"TK": [
+{
+"t": "saudação",
+"o": "Mālō ni",
+"s": "Olá, em toquelauano.",
+"lg": "toquelauano"
+}
+],
+"TL": [
+{
+"t": "saudação",
+"o": "Di'ak ka lae?",
+"l": "bem ou não?",
+"s": "Tudo bem? Em tétum.",
+"lg": "tétum"
+}
+],
+"TM": [
+{
+"t": "palavra",
+"o": "ýaşuly",
+"v": "tk-TM",
+"s": "Pessoa mais velha e respeitada, que dá conselhos."
+}
+],
+"TN": [
+{
+"t": "palavra",
+"o": "برشا",
+"r": "barcha",
+"v": "ar-SA",
+"s": "Muito, no árabe tunisiano."
+}
+],
+"TO": [
+{
+"t": "palavra",
+"o": "faka'apa'apa",
+"v": "to-TO",
+"s": "Respeito, um dos valores principais da cultura tonganesa."
+}
+],
+"TR": [
+{
+"t": "expressão",
+"o": "Kolay gelsin",
+"v": "tr-TR",
+"l": "que venha fácil",
+"s": "Dito a quem está trabalhando: bom trabalho!"
+},
+{
+"t": "expressão",
+"o": "Ağzına sağlık",
+"v": "tr-TR",
+"l": "saúde para a sua boca",
+"s": "Elogio a quem cozinhou, cantou ou falou bem."
+}
+],
+"TT": [
+{
+"t": "gíria",
+"o": "liming",
+"s": "Ficar à toa com os amigos, conversando e rindo.",
+"lg": "inglês de Trinidad"
+},
+{
+"t": "palavra",
+"o": "maco",
+"s": "Bisbilhoteiro, quem se mete na vida dos outros.",
+"lg": "inglês de Trinidad"
+}
+],
+"TV": [
+{
+"t": "saudação",
+"o": "Tālofa",
+"s": "Olá, em tuvaluano.",
+"lg": "tuvaluano"
+}
+],
+"TW": [
+{
+"t": "expressão",
+"o": "小確幸",
+"r": "xiǎo què xìng",
+"v": "zh-TW",
+"l": "pequena felicidade garantida",
+"s": "Alegria pequena do dia a dia, como um chá gelado num dia quente."
+},
+{
+"t": "palavra",
+"o": "Q",
+"s": "Usada para comida elástica e gostosa de mastigar, como as bolinhas do chá de tapioca."
+}
+],
+"TZ": [
+{
+"t": "saudação",
+"o": "Mambo? Poa!",
+"v": "sw-KE",
+"s": "E aí? Suave! Em suaíli."
+},
+{
+"t": "saudação",
+"o": "Shikamoo",
+"v": "sw-KE",
+"s": "Cumprimento de respeito aos mais velhos. Eles respondem “marahaba”."
+}
+],
+"UA": [
+{
+"t": "expressão",
+"o": "дати гарбуза",
+"r": "dáty harbuzá",
+"v": "uk-UA",
+"l": "dar uma abóbora",
+"s": "Recusar um pedido, dizer não."
+}
+],
+"UG": [
+{
+"t": "gíria",
+"o": "extend",
+"l": "estender",
+"s": "“Chega pra lá!”, pedido para abrir espaço no banco.",
+"lg": "inglês de Uganda"
+}
+],
+"UM": [
+{
+"t": "apelido",
+"o": "gooney bird",
+"s": "Apelido do albatroz em Midway, que vive ali aos milhares.",
+"lg": "inglês"
+}
+],
+"US": [
+{
+"t": "expressão",
+"o": "piece of cake",
+"v": "en-US",
+"l": "pedaço de bolo",
+"s": "Muito fácil."
+},
+{
+"t": "expressão",
+"o": "break a leg",
+"v": "en-US",
+"l": "quebre a perna",
+"s": "Boa sorte! Dito a atores antes de entrar no palco."
+}
+],
+"UY": [
+{
+"t": "palavra",
+"o": "ta",
+"v": "es-MX",
+"s": "Tá bom, combinado."
+},
+{
+"t": "palavra",
+"o": "bo",
+"v": "es-MX",
+"s": "Você, ou “ei!” para chamar alguém."
+}
+],
+"UZ": [
+{
+"t": "provérbio",
+"o": "Mehmon otangdan ulug'",
+"v": "uz-UZ",
+"l": "o convidado é maior que seu pai",
+"s": "A visita deve ser tratada com a maior honra."
+}
+],
+"VA": [
+{
+"t": "palavra",
+"o": "autocinetum",
+"s": "Carro, em latim. O Vaticano tem um dicionário que cria palavras latinas para coisas modernas.",
+"lg": "latim"
+}
+],
+"VC": [
+{
+"t": "apelido",
+"o": "Vincy",
+"s": "Apelido carinhoso de São Vicente e de quem é de lá."
+}
+],
+"VE": [
+{
+"t": "gíria",
+"o": "chévere",
+"v": "es-MX",
+"s": "Legal, ótimo."
+},
+{
+"t": "gíria",
+"o": "pana",
+"v": "es-MX",
+"s": "Amigo, parceiro."
+}
+],
+"VG": [
+{
+"t": "palavra",
+"o": "fungi",
+"s": "Ao mesmo tempo um prato de fubá com quiabo e um estilo de música feito com instrumentos caseiros."
+}
+],
+"VI": [
+{
+"t": "palavra",
+"o": "bush tea",
+"s": "Chá de ervas do quintal, remédio caseiro tradicional."
+}
+],
+"VN": [
+{
+"t": "saudação",
+"o": "Ăn cơm chưa?",
+"v": "vi-VN",
+"l": "já comeu arroz?",
+"s": "Um jeito carinhoso de perguntar se está tudo bem."
+}
+],
+"VU": [
+{
+"t": "palavra",
+"o": "tumas",
+"s": "Muito (vem de “too much”). “Tank yu tumas” é “muito obrigado”.",
+"lg": "bislama"
+}
+],
+"WF": [
+{
+"t": "saudação",
+"o": "Mālō te ma'uli",
+"l": "parabéns por estar vivo",
+"s": "Olá, em wallisiano.",
+"lg": "wallisiano"
+}
+],
+"WS": [
+{
+"t": "palavra",
+"o": "mālō",
+"v": "sm-WS",
+"s": "Muito bem, parabéns! Também serve de saudação."
+}
+],
+"XK": [
+{
+"t": "saudação",
+"o": "Ç'kemi?",
+"v": "sq-AL",
+"l": "o que temos?",
+"s": "E aí, tudo bem? No albanês de Kosovo."
+}
+],
+"YE": [
+{
+"t": "palavra",
+"o": "بنت الصحن",
+"r": "bint as-sahn",
+"v": "ar-SA",
+"l": "filha do prato",
+"s": "Bolo de massa folhada em camadas, servido com mel."
+}
+],
+"YT": [
+{
+"t": "palavra",
+"o": "msindzano",
+"s": "Máscara amarela de madeira de sândalo ralada, passada no rosto pelas mulheres.",
+"lg": "maorês"
+}
+],
+"ZA": [
+{
+"t": "exclamação",
+"o": "Eish!",
+"s": "Exclamação de surpresa ou de “que coisa!”, usada em todo o país."
+},
+{
+"t": "expressão",
+"o": "now now",
+"l": "agora agora",
+"s": "Daqui a pouquinho. Já “just now” pode ser bem mais tarde."
+}
+],
+"ZM": [
+{
+"t": "saudação",
+"o": "Muli shani?",
+"s": "Como vai? Em bemba.",
+"lg": "bemba"
+}
+],
+"ZW": [
+{
+"t": "saudação",
+"o": "Mamuka sei?",
+"l": "como acordou?",
+"s": "Bom dia, em shona.",
+"lg": "shona"
+}
+],
+"IM": [
+{
+"t": "expressão",
+"o": "traa dy liooar",
+"l": "tempo suficiente",
+"s": "Sem pressa, há tempo de sobra. Lema de vida dos moradores da ilha.",
+"lg": "manês"
+}
+]
+}

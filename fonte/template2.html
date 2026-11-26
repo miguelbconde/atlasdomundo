@@ -134,6 +134,16 @@ svg.focus .cty:not(.me){opacity:.35}
 .dish img{width:64px;height:64px;background:var(--bg2);border-radius:4px;padding:6px}
 .dish b{font:600 19px var(--serif);display:block}
 .dish span{color:var(--ink2);font-size:16px}
+.exs{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-top:4px}
+.ex{border:1px solid var(--line);border-left:3px solid var(--c,var(--ink3));background:var(--paper);border-radius:4px;padding:12px 14px}
+.ex .ty{font:700 11px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+.ex .or{display:flex;gap:8px;align-items:center;font:600 21px/1.25 var(--serif);margin:4px 0 2px}
+.ex .or button{border:1px solid var(--line2);background:none;border-radius:999px;width:30px;height:30px;display:inline-grid;place-items:center;flex:none;cursor:pointer}
+.ex .or button svg{width:15px;height:15px;stroke:var(--ink2);fill:none;stroke-width:2}
+.ex .or button.on svg{stroke:var(--link)}
+.ex .rm{color:var(--ink3);font-size:14px}
+.ex .li{font-style:italic;color:var(--ink2);font-size:15px;margin-top:4px}
+.ex .se{margin-top:6px;font-size:16px;line-height:1.45}
 .words{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
 .word{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;border:1px solid var(--line);background:var(--paper);border-radius:4px;padding:10px 12px}
 .word:hover{border-color:var(--ink3)}
@@ -517,6 +527,7 @@ function viewCountry(k) {
       ${sec('Economia e dinheiro', [curHTML, F.exporta && F.exporta.length && `<h3>Principais exportações</h3>${plst(F.exporta)}`, F.agricultura && F.agricultura.length && `<h3>Agricultura</h3>${plst(F.agricultura)}`].filter(Boolean).join(''))}
       ${F.pratos && F.pratos.length ? sec('Comida', `<div class="dishes" style="--c:${c}">${F.pratos.map(p => `<div class="dish"><img src="${om(p.i)}" alt="" loading="lazy"><div><b>${esc(p.nome)}</b><span>${esc(p.desc || '')}</span></div></div>`).join('')}</div>`) : ''}
       ${g ? sec('Como se diz', `<div class="words">${[['olá', 1, 2], ['tchau', 3, 4], ['obrigado', 5, 6]].map(([pt, i, j]) => `<button class="word" data-w="${i}"><span class="pt">${ICON.spk}${pt}</span><span class="fx" lang="${o.gv || g[0]}">${esc(g[i])}</span><span class="pr">pronúncia aproximada: ${esc(g[j])}</span></button>`).join('')}</div><p class="src">Em ${esc(o.lg[0] || '')}${o.lg.length > 1 ? '. Outras línguas: ' + o.lg.slice(1, 5).map(esc).join(', ') : ''}.</p>`) : ''}
+      ${(o.ex || []).length ? sec('Jeito de falar', `<div class="exs" style="--c:${c}">${o.ex.map((x, i) => `<div class="ex"><div class="ty">${esc(x.t)}${x.lg ? ' · ' + esc(x.lg) : ''}</div><div class="or"><span lang="${esc(x.v || '')}">${esc(x.o)}</span>${x.v ? `<button data-x="${i}" aria-label="Ouvir">${ICON.spk}</button>` : ''}</div>${x.r ? `<div class="rm">pronúncia aproximada: ${esc(x.r)}</div>` : ''}${x.l ? `<div class="li">ao pé da letra: “${esc(x.l)}”</div>` : ''}<div class="se">${esc(x.s)}</div></div>`).join('')}</div>`) : ''}
       ${sec('Símbolos', [F.simbolos && F.simbolos.length && `<h3>Símbolos nacionais</h3>${lst(F.simbolos)}`, F.cores && F.cores.length && `<h3>Cores nacionais</h3>${lst(F.cores)}`].filter(Boolean).join(''))}
       ${stats ? sec('Em números', `<div class="stats">${stats}</div><p class="src">Toque num número para ver a lista de todos os países.</p>`) : ''}
       ${items.length ? sec('Em foco', `<div class="gal">${items.filter(x => x.img).map(figure).join('')}</div>${items.some(x => !x.img) ? `<div style="columns:2 280px;column-gap:24px;margin-top:16px">${items.filter(x => !x.img).map(figure).join('')}</div>` : ''}${sp ? `<p class="src">Mais em <a href="#r/${sp.p}">${esc(sp.t)}</a>.</p>` : ''}`) : sp ? sec('Em foco', `<p>Leia sobre a região: <a href="#r/${sp.p}">${esc(sp.t)}</a>.</p>`) : ''}
@@ -538,6 +549,7 @@ function viewCountry(k) {
   </div>`;
   $('#sayname').onclick = () => { if (!say(o.n)) toast('Este aparelho não tem voz em português.'); };
   if ($('#saynat')) $('#saynat').onclick = () => { if (!say(o.nn, o.nv)) toast(`Este aparelho não tem voz em ${LANGN(o.nl)}.`); };
+  $$('.ex button[data-x]', main).forEach(b => b.onclick = () => { const x = o.ex[+b.dataset.x]; b.classList.add('on'); if (!say(x.o.replace(/[!¡?¿]/g, ''), x.v, () => b.classList.remove('on'))) { b.classList.remove('on'); toast('Este aparelho não tem voz para essa língua.'); } });
   $$('.word', main).forEach(b => b.onclick = () => { const i = +b.dataset.w; $$('.word', main).forEach(x => x.classList.remove('on')); b.classList.add('on'); if (!say(g[i].replace(/[!¡！]/g, ''), o.gv || g[0], () => b.classList.remove('on'))) { b.classList.remove('on'); toast(`Este aparelho não tem voz em ${o.lg[0] || 'essa língua'}. Leia em voz alta: “${g[i + 1]}”.`, 4000); } });
   if ($('#anb')) $('#anb').onclick = e => playAnthem(k, e.currentTarget);
   if ($('#cv')) { const m = curs[0], r = rate(m); const up = () => { const x = parseFloat($('#cv').value) || 0; $('#cvo').textContent = 'R$ ' + money(x / r); }; $('#cv').oninput = up; up(); }

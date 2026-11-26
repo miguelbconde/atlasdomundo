@@ -239,6 +239,10 @@ for o in K['C']:
 K['ARTS']=ARTS; K['RATES']={'date':R['date'],'brl':R['brl']}
 REC=json.load(open('anth/rec.json')) if os.path.exists('anth/rec.json') else {}
 REC.pop('NG',None)  # gravação é do hino antigo (1978–2024)
+_EX={}
+for _f in 'abc': _EX.update(json.load(open(f'expr/{_f}.json')))
+for o in K['C']:
+    if o['k'] in _EX: o['ex']=_EX[o['k']]
 K['REC']=REC
 K.pop('SP',None)
 json.dump(K,open('kids2.json','w'),ensure_ascii=False)
