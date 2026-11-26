@@ -40,6 +40,7 @@ MAR = [(shape(f['geometry']).buffer(0), f['properties']) for f in feats('ne_10m_
 ELEV = [(shape(f['geometry']), f['properties']) for f in feats('ne_10m_geography_regions_elevation_points')]
 PLACES = [(shape(f['geometry']), f['properties']) for f in feats('ne_10m_populated_places_simple')]
 GLAC = [shape(f['geometry']).buffer(0) for f in feats('ne_10m_glaciated_areas')]
+PT2 = json.load(open('/home/claude/dkat/hand_pt.json')) if os.path.exists('/home/claude/dkat/hand_pt.json') else {}
 RTR = json.load(open('/home/claude/dkat/hand_names.json')) if os.path.exists('/home/claude/dkat/hand_names.json') else {}
 
 sr = np.asarray(Image.open('/tmp/geo/pkgs/mpl_toolkits/basemap_data/shadedrelief.jpg').convert('L'), dtype=np.float32)
@@ -117,6 +118,12 @@ def country_geom(k):
     return unary_union(parts) if parts else None
 
 def render(k):
+    LOGN = []
+    def T(x, kind):
+        x = (x or '').strip()
+        if x: LOGN.append([kind, x])
+        return PT2.get(x, x)
+
     g = country_geom(k)
     if g is None or g.is_empty: return None
     ps = polys(g)
@@ -292,7 +299,7 @@ def render(k):
                             if inc or rng.random() < .45: mountain(X, Y, msz if inc else msz * .8, 1 if inc else .35)
                     xx += step / sx
                 yy -= step / sx * cosm * .85
-        nm = RTR.get(p['NAME'], p.get('NAME_PT') or p['NAME'])
+        nm = T(RTR.get(p['NAME'], p.get('NAME_PT') or p['NAME']), 'região: ' + fc)
         if fc in ('Range/mtn', 'Desert', 'Plateau', 'Plain', 'Basin', 'Lowland', 'Wetlands', 'Delta', 'Tundra', 'Valley', 'Depression') and apx > (60 * S) ** 2 and inter.intersects(cg):
             rp = inter.representative_point(); X, Y = P(rp.x, rp.y)
             REGL.append((3 + p.get('SCALERANK', 5) * .1 - min(apx / (W * H), .5), nm.upper() if fc != 'Range/mtn' else nm, X, Y, 12.5 * S, (120, 96, 72), 'reg_sp' if fc != 'Range/mtn' else 'reg'))
@@ -304,7 +311,7 @@ def render(k):
     for gg, p in peaks[:2]:
         gg = norm_lon(gg, shift); X, Y = P(gg.x, gg.y)
         d.polygon([(X, Y - 5 * S), (X - 4.5 * S, Y + 3 * S), (X + 4.5 * S, Y + 3 * S)], fill=(60, 50, 44, 255))
-        nm = RTR.get(p['name'], p.get('name_pt') or p['name'])
+        nm = T(RTR.get(p['name'], p.get('name_pt') or p['name']), 'montanha (pico)')
         LAB.append((1.5, nm, X + 7 * S, Y, 11.5 * S, (80, 66, 56), 'l_it'))
     # rios: rótulos (os maiores)
     rivlabels.sort(key=lambda t: t[1]['scalerank'])
@@ -316,7 +323,7 @@ def render(k):
         ls = max(polys(gg), key=lambda x: x.length) if hasattr(gg, 'geoms') else gg
         if ls.length * sx < 120 * S: continue
         q = ls.interpolate(.5, normalized=True); X, Y = P(q.x, q.y)
-        LAB.append((2.5, 'rio ' + RTR.get(nm, nm), X, Y - 7 * S, 11.5 * S, (62, 110, 148), 'c_it'))
+        LAB.append((2.5, 'rio ' + T(RTR.get(nm, nm), 'rio'), X, Y - 7 * S, 11.5 * S, (62, 110, 148), 'c_it'))
     # mares
     for gg, p in MAR:
         gg2 = norm_lon(gg, shift)
@@ -325,7 +332,7 @@ def render(k):
         if inter.area * sx * sx / cosm < (90 * S) ** 2: continue
         rp = inter.representative_point(); X, Y = P(rp.x, rp.y)
         if land[int(min(Y, H - 1)), int(min(X, W - 1))] > .5: continue
-        nm = RTR.get(p['name'], p.get('name_pt') or p['name'])
+        nm = T(RTR.get(p['name'], p.get('name_pt') or p['name']), 'mar/água: ' + p['featurecla'])
         LAB.append((4 + p.get('scalerank', 5) * .05, nm, X, Y, 13 * S, (70, 116, 150), 'c_it'))
     # países vizinhos
     for iso, gg, nm in others:
@@ -351,7 +358,7 @@ def render(k):
         gg = norm_lon(gg, shift); X, Y = P(gg.x, gg.y)
         if any(math.hypot(X - c[2], Y - c[3]) < 30 * S for c in LAB if c[0] < 1): continue
         MARK.append(('c', X, Y))
-        LAB.append((.5, RTR.get(p['name'], p['name']), X + 6 * S, Y, 12.5 * S, (40, 40, 40), 'l_city'))
+        LAB.append((.5, T(RTR.get(p['name'], p['name']), 'cidade'), X + 6 * S, Y, 12.5 * S, (40, 40, 40), 'l_city'))
 
     # contorno do país (traço duplo)
     for p in polys(cg):
@@ -415,6 +422,7 @@ def render(k):
         for i, e in enumerate(ECO, 1):
             if cnt[i] / ids.size >= .03: leg.append([e[0], round(cnt[i] / ids.size * 100)])
     feats_ = {'mont': any(fc for fc in []), }
+    json.dump(LOGN, open(f'{OUT}/labels_{k}.json', 'w'), ensure_ascii=False)
     return {'w': WF, 'h': HF, 'eco': sorted(leg, key=lambda t: -t[1]), 'gelo': bool((gl * cm).sum() > 50), 'km': int(km)}
 
 def p_is_cap(p, k):
