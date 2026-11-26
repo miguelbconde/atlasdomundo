@@ -111,6 +111,7 @@ svg.focus .cty:not(.me){opacity:.35}
 .hino small{display:block;color:var(--ink3);font-size:12px}
 .key{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));border-top:1px solid var(--line);border-left:1px solid var(--line);margin-top:14px}
 .key .stat .v{font-size:18px}.key .stat .rk{font-size:12.5px}
+.tzl{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr;gap:0;font-size:14px}.tzl li{display:flex;align-items:baseline;gap:6px;padding:3px 0;border-bottom:1px dotted var(--line);font-weight:400}.tzl li span{flex:1;min-width:0;overflow-wrap:anywhere}.tzl li b{font-variant-numeric:tabular-nums;font-weight:600}.tzl li small{color:var(--ink3);font-size:11px;white-space:nowrap}.tzl li.cap span{font-weight:700}
 .key .clk .v{font-variant-numeric:tabular-nums}
 .ahead h1{font-size:clamp(34px,5.5vw,56px)}
 .ahead .sub{color:var(--ink2);margin-top:6px;display:flex;gap:6px 14px;flex-wrap:wrap;align-items:center}
@@ -546,7 +547,7 @@ function viewCountry(k) {
       ${o.drive ? `<dt>Trânsito</dt><dd>mão ${o.drive === 'l' ? 'esquerda' : 'direita'}</dd>` : ''}
       ${o.idd ? `<dt>Telefone</dt><dd>${esc(o.idd)}</dd>` : ''}
       ${o.tld ? `<dt>Internet</dt><dd>${esc(o.tld)}</dd>` : ''}
-      ${o.tz ? `<dt>Fuso horário</dt><dd id="fz"></dd>` : ''}
+      ${o.tz ? `<dt>Fuso horário</dt><dd id="fz"></dd>` : ''}${o.tzs ? `<dt>Horários no país</dt><dd><ul class="tzl" id="tzl"></ul></dd>` : ''}
     </dl></aside>
   </div>`;
   $('#sayname').onclick = () => { if (!say(o.n)) toast('Este aparelho não tem voz em português.'); };
@@ -555,7 +556,7 @@ function viewCountry(k) {
   $$('.word', main).forEach(b => b.onclick = () => { const i = +b.dataset.w; $$('.word', main).forEach(x => x.classList.remove('on')); b.classList.add('on'); if (!say(g[i].replace(/[!¡！]/g, ''), o.gv || g[0], () => b.classList.remove('on'))) { b.classList.remove('on'); toast(`Este aparelho não tem voz em ${o.lg[0] || 'essa língua'}. Leia em voz alta: “${g[i + 1]}”.`, 4000); } });
   if ($('#anb')) $('#anb').onclick = e => playAnthem(k, e.currentTarget);
   if ($('#cv')) { const m = curs[0], r = rate(m); const up = () => { const x = parseFloat($('#cv').value) || 0; $('#cvo').textContent = 'R$ ' + money(x / r); }; $('#cv').oninput = up; up(); }
-  if (o.tz) startClock(o.tz);
+  if (o.tz) startClock(o.tz, o.tzs);
   if ($('#hmimg')) hmap(k).then(u => { if (u && $('#hmimg')) $('#hmimg').src = u; });
   if ($('#hmimg')) $('#hmimg').onclick = () => openLB($('#hmimg').src, 'Mapa físico: ' + esc(o.n));
   bindFigures();
@@ -565,7 +566,7 @@ function viewCountry(k) {
 const tzOff = (z, d) => { const p = new Intl.DateTimeFormat('en-US', {timeZone: z, timeZoneName: 'longOffset'}).formatToParts(d).find(x => x.type === 'timeZoneName').value; const m = p.match(/([+-])(\d\d):?(\d\d)?/); return m ? (m[1] === '-' ? -1 : 1) * (+m[2] * 60 + +(m[3] || 0)) : 0; };
 const utcTxt = m => 'UTC' + (m === 0 ? '' : (m < 0 ? '−' : '+') + Math.floor(Math.abs(m) / 60) + (Math.abs(m) % 60 ? ':' + String(Math.abs(m) % 60).padStart(2, '0') : ''));
 let CLK = 0;
-function startClock([z, n]) {
+function startClock([z, n], tzs) {
   clearInterval(CLK);
   const tick = () => {
     const e = $('#clk'); if (!e) return clearInterval(CLK);
@@ -574,7 +575,8 @@ function startClock([z, n]) {
     const dia = d.toLocaleDateString('pt-BR', {timeZone: z, weekday: 'short', day: 'numeric', month: 'numeric'});
     const rel = df === 0 ? 'mesma hora de Brasília' : `${df > 0 ? '+' : '−'}${nf(Math.abs(df), Math.abs(df) % 1 ? 1 : 0)} h em relação a Brasília`;
     $('#clz').textContent = `${dia} · ${utcTxt(m)}`;
-    const fz = $('#fz'); if (fz) fz.textContent = `${utcTxt(m)} (${rel})` + (n > 1 ? `. O país tem ${n} fusos; a hora mostrada é a da capital.` : '');
+    const fz = $('#fz'); if (fz) fz.textContent = `${utcTxt(m)} (${rel})` + (tzs ? `. O país tem ${tzs.length} fusos horários; a hora no alto é a da capital.` : n > 1 ? `. O país tem ${n} fusos; a hora mostrada é a da capital.` : '');
+    const tl = $('#tzl'), dk = x => d.toLocaleDateString('en-CA', {timeZone: x}); if (tl && tzs) tl.innerHTML = tzs.map(([zz, nm]) => { const mm = tzOff(zz, d), dd = dk(zz) < dk(z) ? ' (dia anterior)' : dk(zz) > dk(z) ? ' (dia seguinte)' : ''; return `<li${zz === z ? ' class="cap"' : ''}><span>${esc(nm)}</span><b>${d.toLocaleTimeString('pt-BR', {timeZone: zz, hour: '2-digit', minute: '2-digit'})}</b><small>${utcTxt(mm)}${dd}</small></li>`; }).join('');
   };
   tick(); CLK = setInterval(tick, 15000);
 }

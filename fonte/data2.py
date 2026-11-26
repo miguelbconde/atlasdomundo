@@ -258,6 +258,10 @@ _EX={}
 for _f in 'abc': _EX.update(json.load(open(f'expr/{_f}.json')))
 for o in K['C']:
     if o['k'] in _EX: o['ex']=_EX[o['k']]
+from tzgroups import groups as _tzg
+for o in K['C']:
+    g=_tzg(o['k'], (o.get('tz') or [None])[0])
+    if g: o['tzs']=g
 K['REC']=REC
 K.pop('SP',None)
 json.dump(K,open('kids2.json','w'),ensure_ascii=False)
