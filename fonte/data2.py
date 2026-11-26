@@ -262,6 +262,8 @@ from tzgroups import groups as _tzg
 for o in K['C']:
     g=_tzg(o['k'], (o.get('tz') or [None])[0])
     if g: o['tzs']=g
+for _a in K['ARTS']:
+    if _a.get('intro'): _a['intro']=_a['intro'].replace('A maior parte desse aumento aconteceu no Sul Global, onde vivem atualmente mais de 83% das pessoas.','A maior parte desse aumento aconteceu na Ásia, na África e na América Latina, onde vivem hoje mais de 80% das pessoas.')
 K['REC']=REC
 K.pop('SP',None)
 json.dump(K,open('kids2.json','w'),ensure_ascii=False)

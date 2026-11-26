@@ -16,7 +16,7 @@ Monte, para CADA país/território, a seção "Em foco" final:
 **Outras regras:**
 - Sobre o PRÓPRIO país, nada de ligações tangenciais com outros lugares.
 - Evite repetir o que já está na ficha (`ja_na_ficha`); complemente.
-- Perspectiva do Sul Global: povos como sujeitos da própria história, colonização com nome e custo, sem exotismo. Ligue ao Brasil só quando for fato relevante, não forçado.
+- Perspectiva brasileira, atenta ao hemisfério sul quando for o caso (sem usar a expressão "Sul Global"): povos como sujeitos da própria história, colonização com nome e custo, sem exotismo. Ligue ao Brasil só quando for fato relevante, não forçado.
 - **Verifique os fatos com WebSearch** (fontes institucionais, enciclopédias, imprensa séria) para tudo o que for novo; números com ano; nada inventado; na dúvida, sem número.
 - Linguagem: português do Brasil claro, frases curtas, sem infantilizar.
 
