@@ -487,7 +487,7 @@ function rankOf(o, k) { if (!RK[k]) RK[k] = D.C.filter(x => x.un && val(x, k) !=
 function viewCountry(k) {
   const o = BYK[k]; if (!o) return viewMap();
   setTab('paises'); const F = o.f || {}, g = o.g && D.G[o.g], c = col(o.ct), s = o.s || {};
-  const items = (D.ART_BY[k] || []);
+  const items = (o.foco || []).map(id => { const [p, i] = id.split(':'); const a = D.ARTS.find(x => x.p === p); return a && a.items[+i]; }).filter(Boolean);
   const sec = (t, h) => h ? `<section><h2>${t}</h2>${h}</section>` : '';
   const lst = a => a && a.length ? `<ul class="lst">${a.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : '';
   const curs = (o.cur || []).filter(m => rate(m));

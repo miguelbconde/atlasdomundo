@@ -183,6 +183,10 @@ _C['AF'].pop('an',None)
 _C['IL']['capn']='Israel declara Jerusalém sua capital, mas a ONU não reconhece: para a ONU, o status da cidade deve ser decidido em negociação entre israelenses e palestinos (Resolução 478 do Conselho de Segurança, 1980). Por isso, quase todas as embaixadas ficam em Tel Aviv.'
 _C['PS']['capn']='A Palestina declara Jerusalém Oriental sua capital; a ONU considera Jerusalém Oriental território ocupado por Israel desde 1967. O governo palestino funciona em Ramallah.'
 _C['IE']['f']['independencia']='21 de janeiro de 1919, quando o parlamento irlandês (Dáil Éireann) aprovou a Declaração de Independência. O Estado Livre Irlandês, separado do Reino Unido, nasceu em 6 de dezembro de 1922, e o país virou república em 1949.'
+# --- seção Em foco (curadoria) ---
+FO={}
+for f in sorted(glob.glob('foco/out*.json')): FO.update(json.load(open(f)))
+FOCO_PEND=FO
 # --- mapas desenhados ---
 HM=json.load(open('hand/legend.json')) if os.path.exists('hand/legend.json') else {}
 K['ECO']=HM.get('_eco',[])
@@ -203,6 +207,10 @@ for a in ARTS:
     if a.get('ed') and re.search(r'\blivro\b|texto original|original', a['ed'], re.I): a['ed']=None
 for o in K['C']:
     if o.get('p'): o['p']=[SL.get(x,x) for x in o['p']]
+for o in K['C']:
+    ids=[x for x in FOCO_PEND.get(o['k'],[]) if any(a['p']==x.split(':')[0] and int(x.split(':')[1])<len(a['items']) for a in ARTS)]
+    if ids: o['foco']=ids[:5]
+    else: o.pop('foco',None)
 K['ARTS']=ARTS; K['RATES']={'date':R['date'],'brl':R['brl']}
 REC=json.load(open('anth/rec.json')) if os.path.exists('anth/rec.json') else {}
 REC.pop('NG',None)  # gravação é do hino antigo (1978–2024)
