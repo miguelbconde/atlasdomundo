@@ -71,8 +71,8 @@
 "SC": [
 {
 "t": "saudação",
-"o": "Ki manyer?",
-"s": "Como vai? Em crioulo seichelense.",
+"o": "Ki dil?",
+"s": "E aí? Em crioulo seichelense.",
 "lg": "crioulo seichelense"
 }
 ],
@@ -189,10 +189,9 @@
 ],
 "SS": [
 {
-"t": "expressão",
-"o": "mafi mushkila",
-"s": "Sem problema, no árabe de Juba.",
-"lg": "árabe de Juba"
+"t": "palavra",
+"o": "Arabi Juba",
+"s": "O árabe de Juba, língua de rua que nasceu da mistura de línguas e une gente de dezenas de povos diferentes."
 }
 ],
 "ST": [
@@ -301,9 +300,9 @@
 ],
 "TK": [
 {
-"t": "saudação",
-"o": "Mālō ni",
-"s": "Olá, em toquelauano.",
+"t": "expressão",
+"o": "Fakafetai lahi lele",
+"s": "Muito obrigado, em toquelauano.",
 "lg": "toquelauano"
 }
 ],
@@ -538,7 +537,6 @@
 {
 "t": "saudação",
 "o": "Mālō te ma'uli",
-"l": "parabéns por estar vivo",
 "s": "Olá, em wallisiano.",
 "lg": "wallisiano"
 }

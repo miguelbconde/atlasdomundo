@@ -397,9 +397,9 @@ function makeMap(host, opt = {}) {
   const par = lat => 'M' + Array.from({length: 181}, (_, i) => NE(-180 + i * 2, lat).map(n => n.toFixed(1)).join(',')).join('L');
   const mer = lon => 'M' + Array.from({length: 91}, (_, i) => NE(lon, -90 + i * 2).map(n => n.toFixed(1)).join(',')).join('L');
   const TR = 23.44, REF = `<path class="ref eq" d="${par(0)}"/><path class="ref" d="${par(TR)}"/><path class="ref" d="${par(-TR)}"/><path class="ref" d="${mer(0)}"/>`;
-  const lab = (lon, lat, t, c, dy = -2.5) => { const q = P(...NE(lon, lat)); return `<text class="${c}" x="${q[0]}" y="${q[1] + dy}" >${t}</text>`; };
+  const lab = (lon, lat, t, c, dy = -2.5) => { const q = P(...NE(lon, lat)), L = t.split('|'); return `<text class="${c}" x="${q[0]}" y="${q[1] + dy}" >${L.length < 2 ? t : L.map((s, i) => `<tspan x="${q[0]}" dy="${i ? '1.25em' : '-0.6em'}">${s}</tspan>`).join('')}</text>`; };
   const RLAB = [[-24, 0, 'Linha do Equador'], [-42, TR, 'Trópico de Câncer'], [-14, -TR, 'Trópico de Capricórnio']].map(a => lab(a[0], a[1], a[2], 'rlab')).join('') + (() => { const q = P(...NE(0, -47)); return `<text class="rlab" x="${q[0]}" y="${q[1]}" transform="rotate(-90 ${q[0]} ${q[1]})" dy="-2.5">Meridiano de Greenwich</text>`; })();
-  const OLAB = [[-140, -8, 'OCEANO PACÍFICO'], [150, 20, 'OCEANO PACÍFICO'], [-40, 36, 'OCEANO ATLÂNTICO'], [-14, -31, 'OCEANO ATLÂNTICO'], [78, -16, 'OCEANO ÍNDICO'], [-10, 85, 'OCEANO GLACIAL ÁRTICO'], [40, -60, 'OCEANO AUSTRAL']].map(a => lab(a[0], a[1], a[2], 'olab', 0)).join('');
+  const OLAB = [[-140, -8, 'OCEANO PACÍFICO'], [150, 20, 'OCEANO PACÍFICO'], [-40, 36, 'OCEANO ATLÂNTICO'], [-20, -35, 'OCEANO|ATLÂNTICO'], [78, -16, 'OCEANO ÍNDICO'], [-10, 85, 'OCEANO GLACIAL ÁRTICO'], [40, -60, 'OCEANO AUSTRAL']].map(a => lab(a[0], a[1], a[2], 'olab', 0)).join('');
   const tiny = D.C.filter(o => o.pt && (!MP.paths[o.k] || o.pt[2] < 4) && !['AQ', 'UM', 'HM', 'BV'].includes(o.k));
   host.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${opt.label || 'Mapa do mundo: toque num país'}"><rect x="-3000" y="-3000" width="7000" height="7000" fill="var(--sea)"/><g ${FLIP ? `transform="matrix(-1,0,0,-1,${W},${H})"` : ''}>${REF}<g>${D.C.filter(o => MP.paths[o.k]).map(o => `<path class="cty" data-k="${o.k}" fill="${col(o.ct)}" d="${MP.paths[o.k]}"><title>${esc(o.n)}</title></path>`).join('')}</g><g class="ds">${tiny.map(o => `<circle class="dot" data-k="${o.k}" cx="${o.pt[0]}" cy="${o.pt[1]}" r="2" fill="${col(o.ct)}"><title>${esc(o.n)}</title></circle>`).join('')}</g></g><g class="cl">${opt.noCont ? '' : RLAB + OLAB}</g><g class="ls"></g></svg>` + (opt.controls === false ? '' : `<div class="mctl"><button class="ib" data-z="1" aria-label="Aproximar">${ICON.plus}</button><button class="ib" data-z="-1" aria-label="Afastar">${ICON.minus}</button><button class="ib" data-z="0" aria-label="Ver o mundo todo">${ICON.home}</button></div>`);
   const svg = $('svg', host), LS = $('.ls', svg), DS = $$('.dot', svg), CL = $('.cl', svg);
@@ -411,7 +411,7 @@ function makeMap(host, opt = {}) {
     svg.setAttribute('viewBox', `${v.x} ${v.y} ${v.w} ${v.h}`);
     const r = svg.getBoundingClientRect(), s = r.width / v.w || 1;
     DS.forEach(d => d.setAttribute('r', (opt.controls === false ? 2.6 : s < 1.5 ? 2.4 : s < 3 ? 3.4 : 5) / s));
-    CL.style.display = s > 2.2 ? 'none' : ''; $$('.clab', CL).forEach(t => t.setAttribute('font-size', 10 / s)); $$('.rlab', CL).forEach(t => t.setAttribute('font-size', 6 / s)); $$('.olab', CL).forEach(t => t.setAttribute('font-size', 6.8 / s));
+    CL.style.display = s > 2.2 ? 'none' : ''; $$('.clab', CL).forEach(t => t.setAttribute('font-size', 10 / s)); $$('.rlab', CL).forEach(t => t.setAttribute('font-size', 6 / s)); $$('.olab', CL).forEach(t => t.setAttribute('font-size', 5.4 / s));
     if (opt.noLabels) { LS.innerHTML = ''; return; }
     const fs = 12.5 / s, out = [], boxes = [];
     for (const o of labeled.slice().sort((a, b) => b.pt[2] - a.pt[2])) {
